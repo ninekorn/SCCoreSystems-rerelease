@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v2.1": {
-      "Ab3d.DXEngine/3.3.7279": {
+      "Ab3d.DXEngine/4.0.7447": {
         "type": "package",
         "compile": {
           "lib/net45/Ab3d.DXEngine.dll": {}
@@ -379,15 +379,15 @@
     }
   },
   "libraries": {
-    "Ab3d.DXEngine/3.3.7279": {
-      "sha512": "4n05hFYM/rX2srQs628vr2JzE+CjXWYYx7D12oX2Vd0zZDoFAaSjIZu5bH0qZxW5NrcfRNQi0P/Ll1B0ZMCmLw==",
+    "Ab3d.DXEngine/4.0.7447": {
+      "sha512": "ViBSVMvvO8cKW/nb1UHmBtxzER5uJ9hNxrWWNcbbVgTUxCbCNq0L7BXBv0km/tbWVOrKrsMFYZpIr3MceJRx6g==",
       "type": "package",
-      "path": "ab3d.dxengine/3.3.7279",
+      "path": "ab3d.dxengine/4.0.7447",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.txt",
-        "ab3d.dxengine.3.3.7279.nupkg.sha512",
+        "ab3d.dxengine.4.0.7447.nupkg.sha512",
         "ab3d.dxengine.nuspec",
         "icon.png",
         "lib/net40/Ab3d.DXEngine.dll",
@@ -1149,7 +1149,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.1": [
-      "Ab3d.DXEngine >= 3.3.7279",
+      "Ab3d.DXEngine >= 4.0.7447",
       "Microsoft.NETCore.App >= 2.1.0",
       "SharpDX >= 4.2.0",
       "SharpDX.D3DCompiler >= 4.2.0",
@@ -1170,11 +1170,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCSoreSystems-rerelease\\sccsv10\\sccsv10.csproj",
+      "projectUniqueName": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCCoreSystems-rerelease\\sccsv10\\sccsv10.csproj",
       "projectName": "sccsv10",
-      "projectPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCSoreSystems-rerelease\\sccsv10\\sccsv10.csproj",
+      "projectPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCCoreSystems-rerelease\\sccsv10\\sccsv10.csproj",
       "packagesPath": "C:\\Users\\ninekorn\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCSoreSystems-rerelease\\sccsv10\\obj\\",
+      "outputPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCCoreSystems-rerelease\\sccsv10\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -1206,7 +1206,7 @@
         "dependencies": {
           "Ab3d.DXEngine": {
             "target": "Package",
-            "version": "[3.3.7279, )"
+            "version": "[4.0.7447, )"
           },
           "Microsoft.NETCore.App": {
             "target": "Package",
@@ -1267,7 +1267,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'Ab3d.DXEngine 3.3.7279' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.1'. This package may not be fully compatible with your project.",
+      "message": "Package 'Ab3d.DXEngine 4.0.7447' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.1'. This package may not be fully compatible with your project.",
       "libraryId": "Ab3d.DXEngine",
       "targetGraphs": [
         ".NETCoreApp,Version=v2.1"

@@ -186,11 +186,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCSoreSystems-rerelease\\sc_message_object\\sc_message_object.csproj",
+      "projectUniqueName": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCCoreSystems-rerelease\\sc_message_object\\sc_message_object.csproj",
       "projectName": "sc_message_object",
-      "projectPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCSoreSystems-rerelease\\sc_message_object\\sc_message_object.csproj",
+      "projectPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCCoreSystems-rerelease\\sc_message_object\\sc_message_object.csproj",
       "packagesPath": "C:\\Users\\ninekorn\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCSoreSystems-rerelease\\sc_message_object\\obj\\",
+      "outputPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCCoreSystems-rerelease\\sc_message_object\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

@@ -1170,11 +1170,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCSoreSystems-rerelease\\sc_core_systems\\sc_core_systems\\sc_core_systems.csproj",
+      "projectUniqueName": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCCoreSystems-rerelease\\sc_core_systems\\sc_core_systems\\sc_core_systems.csproj",
       "projectName": "sc_core_systems",
-      "projectPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCSoreSystems-rerelease\\sc_core_systems\\sc_core_systems\\sc_core_systems.csproj",
+      "projectPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCCoreSystems-rerelease\\sc_core_systems\\sc_core_systems\\sc_core_systems.csproj",
       "packagesPath": "C:\\Users\\ninekorn\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCSoreSystems-rerelease\\sc_core_systems\\sc_core_systems\\obj\\",
+      "outputPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCCoreSystems-rerelease\\sc_core_systems\\sc_core_systems\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

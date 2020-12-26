@@ -216,11 +216,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCSoreSystems-rerelease\\jitter_sc\\jitter_sc.csproj",
+      "projectUniqueName": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCCoreSystems-rerelease\\jitter_sc\\jitter_sc.csproj",
       "projectName": "jitter_sc",
-      "projectPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCSoreSystems-rerelease\\jitter_sc\\jitter_sc.csproj",
+      "projectPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCCoreSystems-rerelease\\jitter_sc\\jitter_sc.csproj",
       "packagesPath": "C:\\Users\\ninekorn\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCSoreSystems-rerelease\\jitter_sc\\obj\\",
+      "outputPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCCoreSystems-rerelease\\jitter_sc\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
