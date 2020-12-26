@@ -1,0 +1,11 @@
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems\SCJitterDemoSharpDX\bin\Release\netcoreapp2.1\SCJitterDemoSharpDX.deps.json
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems\SCJitterDemoSharpDX\bin\Release\netcoreapp2.1\SCJitterDemoSharpDX.runtimeconfig.json
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems\SCJitterDemoSharpDX\bin\Release\netcoreapp2.1\SCJitterDemoSharpDX.runtimeconfig.dev.json
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems\SCJitterDemoSharpDX\bin\Release\netcoreapp2.1\SCJitterDemoSharpDX.dll
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems\SCJitterDemoSharpDX\bin\Release\netcoreapp2.1\SCJitterDemoSharpDX.pdb
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems\SCJitterDemoSharpDX\obj\Release\netcoreapp2.1\SCJitterDemoSharpDX.csproj.CoreCompileInputs.cache
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems\SCJitterDemoSharpDX\obj\Release\netcoreapp2.1\SCJitterDemoSharpDX.AssemblyInfoInputs.cache
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems\SCJitterDemoSharpDX\obj\Release\netcoreapp2.1\SCJitterDemoSharpDX.AssemblyInfo.cs
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems\SCJitterDemoSharpDX\obj\Release\netcoreapp2.1\SCJitterDemoSharpDX.dll
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems\SCJitterDemoSharpDX\obj\Release\netcoreapp2.1\SCJitterDemoSharpDX.pdb
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems\SCJitterDemoSharpDX\obj\Release\netcoreapp2.1\SCJitterDemoSharpDX.csprojAssemblyReference.cache
