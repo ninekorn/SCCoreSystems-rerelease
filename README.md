@@ -32,7 +32,7 @@ It is far from the new unity3d physics engine where one can load up to over 1000
 
 I can do a console virtual reality version without using the ab3d.DXEngine.OculusWrap and using the ab3d.oculus wrap only dll which in turn isn't making you having to use the 60 days trial library. but i don't have the time to do that version yet and i see no reasons why i wouldn't use the libraries of the ab3d.dxengine because they are awesome. But i would consider coding that software if only people would request it.
 
-But the quality of using the library ab3d.DXEngine.OculusWrap on top of the ab3d.OculusWrap is better and a lot of work was done already by Andrej Benedik towards having a good quality virtual reality solution for the oculus rift cv1 provided by his libraries. Using the oculus rift cv1 was my only option to make my own programs whenever i purchased the oculus rift cv1 on the 5th of August 2017. that's why currently my programs are only available for the oculus rift cv1 and that i did not invest in a newer oculus headset. i do not have an oculus rift s yet though, but c++ wrappers for the oculus rift cv1 for C# where made available with c++ entry points like this
+But the quality of using the library ab3d.DXEngine.OculusWrap on top of the ab3d.OculusWrap is better and a lot of work was done already by Andrej Benedik towards having a good quality virtual reality solution for the oculus rift cv1 provided by his libraries. Using the oculus rift cv1 was my only option to make my own programs whenever i purchased the oculus rift cv1 on the 5th of August 2017. that's why currently my programs are only available for the oculus rift cv1 and that i did not invest in a newer oculus headset. i do not have an oculus rift s yet though, but c++ wrappers for the oculus rift cv1 for C# where made available with c++ entry points like this:
 
 [DllImport(DllOvrDll, EntryPoint="ovr_SubmitFrame", SetLastError=false, CallingConvention=CallingConvention.Cdecl)]
 private static extern Result ovr_SubmitFrame(ovrSession session, Int64 frameIndex, IntPtr viewScaleDesc, IntPtr layerPtrList, uint layerCount);
@@ -44,7 +44,9 @@ https://www.relativty.com/
 and if i can make my c# programs for windows 10 work on ubuntu dotnet, it would become something even greater and it would be without the oculus headset. but some people at http://www.openhmd.net/index.php/devices/ almost have it all figured out for the oculus headsets compatibility in ubuntu.
 thank you for reading me 🙂
 steve chassé
+
 --------------------------------------------------------------------------
+
 I have learned to create my own direct3D c# programs and the main help from being able to get out of unity3d and be independant from unity3D was to code my own programs in C#. It was a sad choice, but back in unity 2017, adding the framework in order to make a virtual desktop from sharpdx was a tough thing to do and i couldn't make it happen. i then chose to learn by myself.
 
 So for developping my softwares, i took this as a reference:
