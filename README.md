@@ -39,7 +39,8 @@ so if it was done for the oculus rift cv1, it might probably be done also for th
 https://www.hackster.io/.../relativ-build-your-own-vr...
 or this:
 https://www.relativty.com/
-and if i can make my c# programs for windows 10 work on ubuntu dotnet, it would become something even greater and it would be without the oculus headset. but some people at http://www.openhmd.net/index.php/devices/ almost have it all figured out for the oculus headsets compatibility in ubuntu.
+and if i can make my c# programs for windows 10 work on ubuntu dotnet, it would become something even greater and it would be without the oculus headset. but some people at http://www.openhmd.net/index.php/devices/ provide a ubuntu solution.
+
 thank you for reading me 🙂
 steve chassé
 
