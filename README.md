@@ -7,13 +7,21 @@ merry xmas everyone.
 I don't have any gifts to give except my github repo is now public and pretty much everything is MIT licensed except the Ab3d.DXEngine nuggets where you have a 60 days trial and other things that i didn't code but provide the link to the reference of stackoverflow and elsewhere on programming forums. no functionnal virtual reality keyboard though but sccsVD4ED and sccsVD4VE should have a working mouse for the virtual desktop. i have put up to date the references and nuggets. 
 
 the username is "9" and the password is "std" for standard. 
+
 List of programs:
+
 sccsv10 - 1st version
+
 sccsv11 - 2nd version
+
 sc_core_systems - 3rd version. console
+
 sccsVD4ED - 3rd version, using wpf. for elite dangerous - the steamVR overlay doesn't work properly yet unfortunately so i cannot have my virtual desktop screen sent to the steamVR overlay c# scripts. So this program doesn't even work with elite dangerous yet.
+
 sccsVD4VE - 3rd version. using wpf. for void expanse.
+
 Jitter - the original physics engine.
+
 sc_message_object - i created this class because it was the only way i had found to have a stable multithreaded application where everything worked and that this single object can be passed to all threads inside of the application whether you have threads or background workers or tasks.
 
 For the moment, i have chosen an MIT license for the rest of my repository that you can find here: https://github.com/ninekorn/SCCoreSystems-rerelease
