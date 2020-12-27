@@ -2,7 +2,7 @@ OCULUS RIFT CV1 only.
 
 # SCCoreSystems-rerelease
 
-I don't have any gifts to give except my github repo is now public and pretty much everything is MIT licensed except the Ab3d.DXEngine nuggets where you have a 60 days trial and other things that i didn't code but provide the link to the reference of stackoverflow and elsewhere on programming forums. no functionnal virtual reality keyboard though but sccsVD4ED and sccsVD4VE should have a working mouse for the virtual desktop. i have put up to date the references and nuggets. 
+you have a 60 days trial usuing the Ab3d.DXEngine nuggets. what i didn't code, i provide the link to the reference of stackoverflow and elsewhere on programming forums. no functionnal virtual reality keyboard yet though but sccsVD4ED and sccsVD4VE should have a working mouse for the virtual desktop. i have put up to date the references and nuggets. 
 
 the username is "9" and the password is "std" for standard. 
 
@@ -12,7 +12,7 @@ sccsv10 - 1st version
 
 sccsv11 - 2nd version
 
-sc_core_systems - 3rd version. console
+sc_core_systems - 3rd version. console dotnet directx virtual reality.
 
 sccsVD4ED - 3rd version, using wpf. for elite dangerous - the steamVR overlay doesn't work properly yet unfortunately so i cannot have my virtual desktop screen sent to the steamVR overlay c# scripts. So this program doesn't even work with elite dangerous yet.
 
