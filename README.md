@@ -2,8 +2,6 @@ OCULUS RIFT CV1 only.
 
 # SCCoreSystems-rerelease
 
-merry xmas everyone. 
-
 I don't have any gifts to give except my github repo is now public and pretty much everything is MIT licensed except the Ab3d.DXEngine nuggets where you have a 60 days trial and other things that i didn't code but provide the link to the reference of stackoverflow and elsewhere on programming forums. no functionnal virtual reality keyboard though but sccsVD4ED and sccsVD4VE should have a working mouse for the virtual desktop. i have put up to date the references and nuggets. 
 
 the username is "9" and the password is "std" for standard. 
