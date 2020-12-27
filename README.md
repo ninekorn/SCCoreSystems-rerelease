@@ -41,7 +41,7 @@ or this:
 https://www.relativty.com/
 and if i can make my c# programs for windows 10 work on ubuntu dotnet, it would become something even greater and it would be without the oculus headset. but some people at http://www.openhmd.net/index.php/devices/ provide a ubuntu solution.
 
-thank you for reading me 🙂
+thank you for reading me
 steve chassé
 
 --------------------------------------------------------------------------
