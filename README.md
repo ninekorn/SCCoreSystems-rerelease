@@ -1,4 +1,5 @@
-OCULUS RIFT CV1 only.
+OCULUS RIFT CV1 only - as per advertised here https://forums.frontier.co.uk/threads/virtual-desktop-program-with-embedded-physics-engine-at-the-press-of-a-button-coming-in-2020.542577/#post-8514927 . currently the keyboard is not working and the microsoft windows voice recognition stopped working. I have coded this program and used as reference 
+many sources from the internet and normally i try to reference it all when i program.
 
 # SCCoreSystems-rerelease
 
@@ -22,7 +23,6 @@ Jitter - the original physics engine.
 
 sc_message_object - i created this class because it was the only way i had found to have a stable multithreaded application where everything worked and that this single object can be passed to all threads inside of the application whether you have threads or background workers or tasks.
 
-For the moment, i have chosen an MIT license for the rest of my repository that you can find here: https://github.com/ninekorn/SCCoreSystems-rerelease
 PLEASE NOTE IT CURRENTLY ONLY WORKS WITH AN OCULUS RIFT CV1.  
 
 This is a re-release of my repository posted on github 6 months ago for my c# Virtual Reality Virtual Desktop program, and i have left my original version private on github.
