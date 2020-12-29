@@ -1,4 +1,4 @@
-OCULUS RIFT CV1 only - as per advertised here https://forums.frontier.co.uk/threads/virtual-desktop-program-with-embedded-physics-engine-at-the-press-of-a-button-coming-in-2020.542577/#post-8514927 . currently the keyboard is not working and the microsoft windows voice recognition stopped working. I have coded this program and used as reference 
+OCULUS RIFT CV1 only - NOT WORKING YET FOR ELITE DANGEROUS AS I HAVE A HARD TIME MAKING THE STEAMVR OVERLAY WORK - as per advertised here https://forums.frontier.co.uk/threads/virtual-desktop-program-with-embedded-physics-engine-at-the-press-of-a-button-coming-in-2020.542577/#post-8514927 . currently the keyboard is not working and the microsoft windows voice recognition stopped working. I have coded this program and used as reference 
 many sources from the internet and normally i try to reference it all when i program.
 
 # SCCoreSystems-rerelease
