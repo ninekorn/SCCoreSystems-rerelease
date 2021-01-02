@@ -4,3 +4,9 @@ C:\Users\ninekorn\Documents\GitHub\SCSoreSystems-rerelease\Jitter\obj\Release\Ji
 C:\Users\ninekorn\Documents\GitHub\SCSoreSystems-rerelease\Jitter\obj\Release\Jitter.csproj.CoreCompileInputs.cache
 C:\Users\ninekorn\Documents\GitHub\SCSoreSystems-rerelease\Jitter\obj\Release\Jitter.dll
 C:\Users\ninekorn\Documents\GitHub\SCSoreSystems-rerelease\Jitter\obj\Release\Jitter.pdb
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\Jitter\bin\Release\Jitter.dll
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\Jitter\bin\Release\Jitter.pdb
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\Jitter\obj\Release\Jitter.csprojAssemblyReference.cache
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\Jitter\obj\Release\Jitter.csproj.CoreCompileInputs.cache
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\Jitter\obj\Release\Jitter.dll
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\Jitter\obj\Release\Jitter.pdb

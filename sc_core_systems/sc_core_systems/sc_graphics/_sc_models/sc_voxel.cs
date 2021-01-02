@@ -719,7 +719,7 @@ namespace SCCoreSystems.SC_Graphics
                                 _cube._ARMLENGTH = _sizeX * ((ChunkWidth_L + ChunkWidth_R));
                                 _cube._SHOULDERROT = Matrix.Identity;
                                 _cube._ELBOWPOSITION = Vector3.Zero;
-        
+
                             }
                             else if (_addToWorld == 1)
                             {
@@ -756,7 +756,7 @@ namespace SCCoreSystems.SC_Graphics
                                 _cube._ARMLENGTH = _sizeX * ((ChunkWidth_L + ChunkWidth_R));
                                 _cube._SHOULDERROT = Matrix.Identity;
                                 _cube._ELBOWPOSITION = Vector3.Zero;
-          
+
                                 _the_world.AddBody(_cube.transform.Component.rigidbody);
                             }
                             else if (_addToWorld == 2)
@@ -794,7 +794,7 @@ namespace SCCoreSystems.SC_Graphics
                                 _cube._ARMLENGTH = _sizeX * ((ChunkWidth_L + ChunkWidth_R));
                                 _cube._SHOULDERROT = Matrix.Identity;
                                 _cube._ELBOWPOSITION = Vector3.Zero;
-                         
+
 
                                 _the_world.AddBody(_cube.transform.Component.rigidbody);
                             }
@@ -869,7 +869,7 @@ namespace SCCoreSystems.SC_Graphics
             }
             catch (Exception ex)
             {
-                MessageBox((IntPtr)0, ex.ToString(), "Oculus error", 0);
+                MessageBox((IntPtr)0, "error000000" + ex.ToString(), "Oculus error", 0);
 
                 has_init = -1;
                 return false;

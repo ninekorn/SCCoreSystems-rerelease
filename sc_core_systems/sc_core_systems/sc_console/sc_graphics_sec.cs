@@ -14,7 +14,6 @@ using Jitter.Forces;
 using SC_message_object = sc_message_object.sc_message_object;
 using SC_message_object_jitter = sc_message_object.sc_message_object_jitter;
 
-using System.Collections.Generic;
 using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -25,7 +24,6 @@ using SC_WPF_RENDER;
 using SC_WPF_RENDER.SC_Graphics;
 using SC_WPF_RENDER.SC_Graphics.SC_Grid;
 
-using SCCoreSystems.SC_Graphics;
 using Ab3d.OculusWrap.DemoDX11;
 
 using System.Runtime.InteropServices;

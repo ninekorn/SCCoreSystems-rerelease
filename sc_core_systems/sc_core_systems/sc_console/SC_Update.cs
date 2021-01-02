@@ -6,9 +6,9 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Ab3d.DXEngine;
+//using Ab3d.DXEngine;
 using Ab3d.OculusWrap;
-using Ab3d.DXEngine.OculusWrap;
+//using Ab3d.DXEngine.OculusWrap;
 using Ab3d.OculusWrap.DemoDX11;
 
 using SharpDX;

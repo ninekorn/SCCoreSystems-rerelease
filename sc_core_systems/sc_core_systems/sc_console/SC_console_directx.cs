@@ -5,7 +5,7 @@ using System;
 using System.Runtime.InteropServices;
 using DSystemConfiguration = SCCoreSystems.sc_core.sc_system_configuration;
 using Ab3d.OculusWrap;
-using Ab3d.DXEngine.OculusWrap;
+//using Ab3d.DXEngine.OculusWrap;
 using Ab3d.OculusWrap.DemoDX11;
 using Result = Ab3d.OculusWrap.Result;
 
@@ -144,8 +144,8 @@ namespace SCCoreSystems.sc_console
         public int SurfaceWidth;
         public int SurfaceHeight;
         public DateTime startTime;
-        public OculusWrapVirtualRealityProvider _oculusRiftVirtualRealityProvider;
-        public static Ab3d.DirectX.DXDevice _dxDevice;
+        //public OculusWrapVirtualRealityProvider _oculusRiftVirtualRealityProvider;
+        //public static Ab3d.DirectX.DXDevice _dxDevice;
         private RenderTargetView _renderTargetView;
         SharpDX.Direct3D11.Texture2D depthBuffer;
         private DepthStencilView _depthStencilView;
@@ -267,7 +267,7 @@ namespace SCCoreSystems.sc_console
                         //gotta find a way to load the oculus rift service manually maybe.
 
                         //------------------------------FOR AB3D DX ENGINE Device.
-                        _oculusRiftVirtualRealityProvider = new OculusWrapVirtualRealityProvider(OVR, multisamplingCount: 8);
+                        /*_oculusRiftVirtualRealityProvider = new OculusWrapVirtualRealityProvider(OVR, multisamplingCount: 8);
                         //hmdDesc = _oculusRiftVirtualRealityProvider.HmdDescription;
 
                         try
@@ -289,8 +289,113 @@ namespace SCCoreSystems.sc_console
                         hmdDesc = OVR.GetHmdDesc(sessionPtr);
                         //----------------------FOR AB3D DX ENGINE Device.
 
-                        Device = _dxDevice.Device;
-                        device = Device;
+                        Device = _dxDevice.Device;*/
+
+
+
+
+
+
+
+                        // Define initialization parameters with debug flag.
+                        InitParams initializationParameters = new InitParams();
+                        initializationParameters.Flags = InitFlags.Debug | InitFlags.RequestVersion;
+                        initializationParameters.RequestedMinorVersion = 17;
+
+                        // Initialize the Oculus runtime.
+                        string errorReason = null;
+                        try
+                        {
+                            result = OVR.Initialize(initializationParameters);
+
+                            if (result < Result.Success)
+                                errorReason = result.ToString();
+                        }
+                        catch (Exception ex)
+                        {
+                            errorReason = ex.Message;
+                        }
+
+                        if (errorReason != null)
+                        {
+                            Program.MessageBox((IntPtr)0, "Failed to initialize the Oculus runtime library:\r\n" + errorReason, "sccoresystems", 0);//.Show("Failed to initialize the Oculus runtime library:\r\n" + errorReason, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        // Use the head mounted display.
+                        sessionPtr = IntPtr.Zero;
+
+
+                        var graphicsLuid = new GraphicsLuid();
+                        result = OVR.Create(ref sessionPtr, ref graphicsLuid);
+                        if (result < Result.Success)
+                        {
+                            Program.MessageBox((IntPtr)0, "The HMD is not enabled: " + result.ToString(), "sccoresystems", 0);
+                            return;
+                        }
+
+                        hmdDesc = OVR.GetHmdDesc(sessionPtr);
+
+
+
+                        /*var swapChainDesc = new SwapChainDescription();
+                        swapChainDesc.BufferCount = 1;
+                        swapChainDesc.IsWindowed = true;
+                        swapChainDesc.OutputHandle = Program.consoleHandle; //form.Handle
+                        swapChainDesc.SampleDescription = new SampleDescription(1, 0);
+                        swapChainDesc.Usage = Usage.RenderTargetOutput | Usage.ShaderInput;
+                        swapChainDesc.SwapEffect = SwapEffect.Sequential;
+                        swapChainDesc.Flags = SwapChainFlags.AllowModeSwitch;
+                        swapChainDesc.ModeDescription.Width = SurfaceWidth; //form.Width
+                        swapChainDesc.ModeDescription.Height = SurfaceHeight; //form.Height
+                        swapChainDesc.ModeDescription.Format = Format.R8G8B8A8_UNorm;
+                        swapChainDesc.ModeDescription.RefreshRate.Numerator = 0;
+                        swapChainDesc.ModeDescription.RefreshRate.Denominator = 1;
+
+
+                        SharpDX.Direct3D11.Device device;
+                        SharpDX.DXGI.SwapChain swapChain;
+
+                        SharpDX.Direct3D11.Device.CreateWithSwapChain(SharpDX.Direct3D.DriverType.Hardware, DeviceCreationFlags.None, swapChainDesc, out device, out swapChain); // none
+                        */
+                        //_deviceContext = _device.ImmediateContext;
+
+
+
+
+                        device = new SharpDX.Direct3D11.Device(SharpDX.Direct3D.DriverType.Hardware, DeviceCreationFlags.None);
+
+                        // Create DirectX Graphics Interface factory, used to create the swap chain.
+                        SharpDX.DXGI.Factory4 factory = new SharpDX.DXGI.Factory4();
+
+                        //immediateContext = device.ImmediateContext;
+
+                        // Define the properties of the swap chain.
+                        /*SwapChainDescription swapChainDescript = new SwapChainDescription();
+                        swapChainDescript.BufferCount = 1;
+                        swapChainDescript.IsWindowed = true;
+                        swapChainDescript.OutputHandle = Program.consoleHandle;
+                        swapChainDescript.SampleDescription = new SampleDescription(1, 0);
+                        swapChainDescript.Usage = Usage.RenderTargetOutput | Usage.ShaderInput;
+                        swapChainDescript.SwapEffect = SwapEffect.Sequential;
+                        swapChainDescript.Flags = SwapChainFlags.AllowModeSwitch;
+                        swapChainDescript.ModeDescription.Width = SurfaceWidth;
+                        swapChainDescript.ModeDescription.Height = SurfaceHeight;
+                        swapChainDescript.ModeDescription.Format = Format.R8G8B8A8_UNorm;
+                        swapChainDescript.ModeDescription.RefreshRate.Numerator = 0;
+                        swapChainDescript.ModeDescription.RefreshRate.Denominator = 1;
+
+                        SwapChain swapChain;
+                        // Create the swap chain.
+                        swapChain = new SwapChain(factory, device, swapChainDescript);*/
+
+
+
+
+
+
+                        //device = Device;
+                        Device = device;
                         DeviceContext = Device.ImmediateContext;
 
                         if (Device == null)
