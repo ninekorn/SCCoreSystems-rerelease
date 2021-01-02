@@ -1,3 +1,9 @@
+2021-jan-02 - 03h56am
+i updated my console solution sc_core_systems program to only use the ab3d.OculusWrap DLL only, instead of using both the ab3d.OculusWrap and the ab3d.DXEngine.OculusWrap. The reason is people have to build the solutions found here https://github.com/ab4d/Ab3d.OculusWrap in order to build the ab3d.DXEngine.OculusWrap from source as it activates a nugget ab3d.dxengine. So if anyone wants the ab3d.dxengine.oculusWrap graphics, follow the steps i posted in my prior post for today.
+
+regards,
+steve chassé
+
 2021-jan-02-
 i wanted this to have the 60 days trial using the ab3d.dxengine.OculusWrap, right out of the box, for people to use the ab3d.dxengine.oculusWrap. I modified my repos so you won't be able to make them work out of the box anymore.
 
