@@ -755,7 +755,7 @@ namespace SCCoreSystems.sc_console
                     {
 
                     }
-                    Thread.Sleep(0);
+                    Thread.Sleep(1);
                     goto _thread_looper;
 
                     //ShutDown();
