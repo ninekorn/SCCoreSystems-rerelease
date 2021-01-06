@@ -103,16 +103,16 @@ namespace SCCoreSystems
         public static int _world_iterations = 3; // as high as possible normally for higher precision
         public static int _world_small_iterations = 3; // as high as possible normally for higher precision
         public static float _world_allowed_penetration = 0.00123f; //0.00123f  _world_gravity = new JVector(0, -9.81f, 0);
-        public static bool _allow_deactivation;
+        public static bool _allow_deactivation = false;
 
 
         public static int _physics_engine_instance_x = 1; //4
         public static int _physics_engine_instance_y = 1; //1
         public static int _physics_engine_instance_z = 1; //4
 
-        public static int world_width = 2;
+        public static int world_width = 1;
         public static int world_height = 1;
-        public static int world_depth = 2;
+        public static int world_depth = 1;
 
 
         public static float _delta_timer_frame = 0;

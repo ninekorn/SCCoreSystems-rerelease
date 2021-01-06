@@ -51,8 +51,8 @@ namespace _sc_core_systems
         //END OF
 
         //SCREEN SETTINGS
-        int _inst_screen_x = 50;
-        int _inst_screen_y = 50;
+        int _inst_screen_x = 20;
+        int _inst_screen_y = 20;
         int _inst_screen_z = 1;
         float _screen_size_x = 2; //0.0115f //1.5f
         float _screen_size_y = 2; //0.0115f //1.5f
@@ -66,16 +66,16 @@ namespace _sc_core_systems
         //END OF
 
         //HUMAN RIG
-        const int _human_inst_rig_x = 10;
+        const int _human_inst_rig_x = 20;
         const int _human_inst_rig_y = 1;
-        const int _human_inst_rig_z = 10;
+        const int _human_inst_rig_z = 20;
         const int _addToWorld = 0;
 
         //the physics engine can run 4000 objects but the voxels lag a bit
         float _voxel_mass = 100;
-        int _inst_voxel_cube_x = 1;
-        int _inst_voxel_cube_y = 1;
-        int _inst_voxel_cube_z = 1;
+        int _inst_voxel_cube_x = 5;
+        int _inst_voxel_cube_y = 5;
+        int _inst_voxel_cube_z = 5;
         float _voxel_cube_size_x = 0.015f; //0.0115f
         float _voxel_cube_size_y = 0.015f; //0.0115f
         float _voxel_cube_size_z = 0.015f;//0.0015f
@@ -977,13 +977,22 @@ namespace _sc_core_systems
 
 
 
-                                //offsetPosX = _voxel_cube_size_x * 10;
-                                //offsetPosY = _voxel_cube_size_y * 10;
-                                //offsetPosZ = _voxel_cube_size_z * 10;
+                                offsetPosX = _voxel_cube_size_x * 10;
+                                offsetPosY = _voxel_cube_size_y * 10;
+                                offsetPosZ = _voxel_cube_size_z * 10;
 
                                 var _sc_voxel_spheroid = new _sc_voxel();
 
-                                var _hasinit00 = _sc_voxel_spheroid.Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, _voxel_cube_size_x, _voxel_cube_size_y, _voxel_cube_size_z, new Vector4(r, g, b, a), _inst_voxel_cube_x, _inst_voxel_cube_y, _inst_voxel_cube_z, Hwnd, _object_worldmatrix, 2, offsetPosX, offsetPosY, offsetPosZ, World, _voxel_mass, false, SC_console_directx.BodyTag._voxel_spheroid, 2, 2, 2, 2, 2, 2, 10, 9, 10, 9, 10, 9, voxel_general_size, Vector3.Zero, 50,0,0,0,2); //, "terrainGrassDirt.bmp" //0.00035f
+
+                                voxel_general_size = 0.0035f;
+                                int voxel_type = 0;
+                                bool is_static = false;
+
+                                var _hasinit00 = _sc_voxel_spheroid.Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, _voxel_cube_size_x, _voxel_cube_size_y, _voxel_cube_size_z, 
+                                    new Vector4(r, g, b, a), _inst_voxel_cube_x, _inst_voxel_cube_y, _inst_voxel_cube_z, Hwnd, _object_worldmatrix, 2, offsetPosX, offsetPosY, offsetPosZ, World,
+                                    _voxel_mass, is_static, SC_console_directx.BodyTag._voxel_spheroid, 2, 2, 2, 2, 2, 2, 50, 49, 50, 49, 50, 49, voxel_general_size, Vector3.Zero, 250, 0, 0, 0, 2); //, "terrainGrassDirt.bmp" //0.00035f
+
+                                //var _hasinit00 = _sc_voxel_spheroid.Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 5, 5, 5, _voxel_cube_size_x, _voxel_cube_size_y, _voxel_cube_size_z, new Vector4(r, g, b, a), _inst_voxel_cube_x, _inst_voxel_cube_y, _inst_voxel_cube_z, Hwnd, _object_worldmatrix, 2, offsetPosX, offsetPosY, offsetPosZ, World, _voxel_mass, false, SC_console_directx.BodyTag._voxel_spheroid, 2, 2, 2, 2, 2, 2, 10, 9, 10, 9, 10, 9, voxel_general_size, Vector3.Zero, 50,0,0,0,2); //, "terrainGrassDirt.bmp" //0.00035f
                                 _world_voxel_cube_lists[_index] = _sc_voxel_spheroid;
 
                                 worldMatrix_instances_voxel_cube[_index] = new Matrix[_inst_voxel_cube_x * _inst_voxel_cube_y * _inst_voxel_cube_z];
@@ -2980,41 +2989,38 @@ namespace _sc_core_systems
                                                                 }
                                                             }
                                                         }*/
-
-
-
-
-
-
-
-
                                                     }
                                                     else if ((SC_console_directx.BodyTag)body.Tag == SC_console_directx.BodyTag._voxel_spheroid)
                                                     {
-                                                        Matrix.Translation(body.Position.X, body.Position.Y, body.Position.Z, out translationMatrix);
-
-                                                        quatterer = JQuaternion.CreateFromMatrix(body.Orientation);
-
-                                                        tester = new Quaternion(quatterer.X, quatterer.Y, quatterer.Z, quatterer.W);
-
-                                                        Matrix.RotationQuaternion(ref tester, out rigidbody_matrix);
-
-                                                        Matrix.Multiply(ref rigidbody_matrix, ref translationMatrix, out translationMatrix);
-                                                        worldMatrix_instances_voxel_cube[_index][_voxel_cube_counter] = translationMatrix;
-                                                        
-                                                        if (handTriggerRight[1] >= 0.1f)
+                                                        if (!body.IsStatic)
                                                         {
-                                                            var dirToRightHand = new Vector3(_player_rght_hnd[_index]._arrayOfInstances[0].current_pos.M41, _player_rght_hnd[_index]._arrayOfInstances[0].current_pos.M42, _player_rght_hnd[_index]._arrayOfInstances[0].current_pos.M43) - new Vector3(translationMatrix.M41, translationMatrix.M42, translationMatrix.M43);
-                                                            //var dirToRightHand = new Vector3(_player_rght_hnd[_index]._arrayOfInstances[_voxel_cube_counter].current_pos.M41, _player_rght_hnd[_index]._arrayOfInstances[_voxel_cube_counter].current_pos.M42, _player_rght_hnd[_index]._arrayOfInstances[_voxel_cube_counter].current_pos.M43) - new Vector3(translationMatrix.M41, translationMatrix.M42, translationMatrix.M43);
-                                                            //var dirToRightHand = new Vector3(_rightTouchMatrix.M41, _rightTouchMatrix.M42, _rightTouchMatrix.M43) - new Vector3(translationMatrix.M41, translationMatrix.M42, translationMatrix.M43);
-                                                            var lengthofdir = dirToRightHand.Length();
-                                                            dirToRightHand.Normalize();
+                                                            if (handTriggerRight[0] >= 0.001f)
+                                                            {
+                                                                Matrix.Translation(body.Position.X, body.Position.Y, body.Position.Z, out translationMatrix);
+                                                                quatterer = JQuaternion.CreateFromMatrix(body.Orientation);
+                                                                tester = new Quaternion(quatterer.X, quatterer.Y, quatterer.Z, quatterer.W);
+                                                                Matrix.RotationQuaternion(ref tester, out rigidbody_matrix);
+                                                                Matrix.Multiply(ref rigidbody_matrix, ref translationMatrix, out translationMatrix);
 
-                                                            var _force = handTriggerRight[1] * 0.01f;
-                                                            var force = new JVector(dirToRightHand.X, dirToRightHand.Y, dirToRightHand.Z) * _force;
+                                                                var dirToRightHand = new Vector3(_player_rght_hnd[_index]._arrayOfInstances[0].current_pos.M41, _player_rght_hnd[_index]._arrayOfInstances[0].current_pos.M42, _player_rght_hnd[_index]._arrayOfInstances[0].current_pos.M43) - new Vector3(translationMatrix.M41, translationMatrix.M42, translationMatrix.M43);
 
-                                                            body.LinearVelocity += force;
-                                                            body.AddForce(force);
+                                                                //var dirToRightHand = new Vector3(_player_lft_hnd[_index]._arrayOfInstances[_voxel_cube_counter].current_pos.M41, _player_lft_hnd[_index]._arrayOfInstances[_voxel_cube_counter].current_pos.M42, _player_lft_hnd[_index]._arrayOfInstances[_voxel_cube_counter].current_pos.M43) - new Vector3(translationMatrix.M41, translationMatrix.M42, translationMatrix.M43);
+                                                                var lengthofdir = dirToRightHand.Length();
+                                                                dirToRightHand.Normalize();
+
+                                                                var _force = handTriggerRight[0] * 0.01f;
+                                                                var force = new JVector(dirToRightHand.X, dirToRightHand.Y, dirToRightHand.Z) * _force;
+
+                                                                body.LinearVelocity += force;
+                                                                body.AddForce(force);
+                                                                _has_used_trigger = 1;
+                                                            }
+                                                            Matrix.Translation(body.Position.X, body.Position.Y, body.Position.Z, out translationMatrix);
+                                                            quatterer = JQuaternion.CreateFromMatrix(body.Orientation);
+                                                            tester = new Quaternion(quatterer.X, quatterer.Y, quatterer.Z, quatterer.W);
+                                                            Matrix.RotationQuaternion(ref tester, out rigidbody_matrix);
+                                                            Matrix.Multiply(ref rigidbody_matrix, ref translationMatrix, out translationMatrix);
+                                                            worldMatrix_instances_voxel_cube[_index][_voxel_cube_counter] = translationMatrix;
                                                         }
                                                         _voxel_cube_counter++;
                                                     }

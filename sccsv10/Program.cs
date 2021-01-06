@@ -373,7 +373,7 @@ namespace _sc_core_systems
 
 
 
-
+            Console.Title = " ### " + " Made by steve chassé aka ninekorn" + " ### ";
         _main_thread_Loop_x00:
 
             if (_init_main == 1)
@@ -1034,9 +1034,9 @@ namespace _sc_core_systems
                     _mainTasker00.SetApartmentState(ApartmentState.STA);
                     _mainTasker00.Start();
                 }
-                catch
+                catch (Exception ex)
                 {
-                    MessageBox((IntPtr)0, "stack overflow possible. no clue what it is anyway ", "Oculus Error", 0);
+                    MessageBox((IntPtr)0, "" + ex.ToString(), "Oculus Error", 0);
                 }
 
                 _init_main = 2;

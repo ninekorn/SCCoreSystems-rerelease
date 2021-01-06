@@ -716,14 +716,6 @@ namespace _sc_core_systems.SC_Graphics
             ChunkDepth_L = _ChunkDepth_L;
             ChunkDepth_R = _ChunkDepth_R;
 
-
-
-
-
-
-
-
-
             _pos = currentPosition;
 
             planeSize = _planeSize;
@@ -783,7 +775,6 @@ namespace _sc_core_systems.SC_Graphics
                         float distance = 0;
                         //float distance = sc_maths.sc_check_distance_node_3d_geometry(currentPosition, new Vector3(posX, posY, posZ), minx, miny, minz, maxx, maxy, maxz); //11.31415926535f
 
-
                         if (voxel_type == 0)
                         {
                             distance = Vector3.Distance(position, currentPosition);
@@ -811,13 +802,22 @@ namespace _sc_core_systems.SC_Graphics
                         else if (voxel_type == 2)
                         {
                             distance = Vector3.Distance(position, currentPosition);
-                            if (distance < ((ChunkWidth_L) * maxDistance)) // 0.35f
+                            if (distance < ((ChunkWidth_L) * 0.25f)) // 0.35f
                             {
                                 if (_index >= 0 && _index < _max)
                                 {
                                     map[_index] = 1;
                                 }
                             }
+
+                            /*distance = Vector3.Distance(position, currentPosition);
+                            if (distance < ((ChunkWidth_L) * maxDistance)) // 0.35f
+                            {
+                                if (_index >= 0 && _index < _max)
+                                {
+                                    map[_index] = 1;
+                                }
+                            }*/
                         }
 
 
@@ -832,7 +832,7 @@ namespace _sc_core_systems.SC_Graphics
                         //_current_visual_distance_spike_glyco_protein_covid19_min = ((ChunkWidth_L + ChunkWidth_R) * 0.35f);
                         //_current_visual_distance_spike_glyco_protein_covid19_max = ((ChunkWidth_L + ChunkWidth_R) - 1); // increase size of chunk for longer glycoprotein spike
 
-                       
+
                         /*if (randX < 0)
                         {
                             randX -= 100;
@@ -864,8 +864,9 @@ namespace _sc_core_systems.SC_Graphics
                             randZ += 100;
                         }*/
 
-                        else if (distance >= ((ChunkWidth_L) * 0.35f) && distance < ((ChunkWidth_L) * 0.975f)) //0.35f 0.45f
+                        if (distance >= ((ChunkWidth_L) * 0.35f) && distance < ((ChunkWidth_L) * 0.975f)) //0.35f 0.45f //0.975f
                         {
+                            //Console.WriteLine("test0");
                             float _decimal_for_random = 1.0f;
                             //float max_spike_length_for_random = 0.85f;
 
@@ -970,12 +971,13 @@ namespace _sc_core_systems.SC_Graphics
                             }
                             else if (voxel_type == 2)
                             {
-                                /*
+                                //Console.WriteLine("test");
+
                                 if (posY < 0 && posX < 0 && posZ < 0)
                                 {
                                     if (_swtch_spike_00 == 0)
                                     {
-                                        //CreateSpikeGlycoProteinCOVID19(currentPosition, randX, randY, randZ);
+                                        CreateSpikeGlycoProteinCOVID19(currentPosition, randX, randY, randZ);
                                         _swtch_spike_00 = 1;
                                     }
                                 }
@@ -1035,7 +1037,7 @@ namespace _sc_core_systems.SC_Graphics
                                         CreateSpikeGlycoProteinCOVID19(currentPosition, randX, randY, randZ);
                                         _swtch_spike_07 = 1;
                                     }
-                                }*/
+                                }
                             }
 
                             /*if (_current_counter_for_adding_spike_glyco_protein_covid19 >= (_max) * 0.05f)

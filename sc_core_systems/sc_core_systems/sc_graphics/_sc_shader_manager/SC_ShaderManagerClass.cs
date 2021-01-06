@@ -211,7 +211,7 @@ namespace SCCoreSystems.SC_Graphics.SC_ShaderManager
 
 
 
-        sc_voxel.DLightBuffer[] _DLightBuffer_cloth = new sc_voxel.DLightBuffer[1];
+        SC_jitter_cloth.DLightBuffer[] _DLightBuffer_cloth = new SC_jitter_cloth.DLightBuffer[1];
 
         SC_jitter_cloth.DLightBuffer[] _DLightBuffer_SC_jitter_cloth = new SC_jitter_cloth.DLightBuffer[1];
 
@@ -224,7 +224,7 @@ namespace SCCoreSystems.SC_Graphics.SC_ShaderManager
       
 
 
-            /*_DLightBuffer_cloth[0] = new sc_voxel.DLightBuffer()
+            _DLightBuffer_cloth[0] = new SC_jitter_cloth.DLightBuffer()
             {
                 ambientColor = ambientColor,
                 diffuseColor = diffuseColour,
@@ -235,10 +235,10 @@ namespace SCCoreSystems.SC_Graphics.SC_ShaderManager
             };
 
 
-            TextureShaderCLOTH = new SC_Cloth_Shader_Final();
+            //TextureShaderCLOTH = new SC_Cloth_Shader_Final();
             SharpDX.Direct3D11.Buffer ConstantLightBufferCloth = new SharpDX.Direct3D11.Buffer(device, lightBufferDesc);
-            TextureShaderCLOTH.Initialize(device, windowsHandle, ConstantLightBufferCloth, _DLightBuffer_cloth);
-            */
+            ///TextureShaderCLOTH.Initialize(device, windowsHandle, ConstantLightBufferCloth, _DLightBuffer_cloth);
+            
 
             touchShader = new SC_VR_Touch_Shader();
             if (!touchShader.Initialize(device, windowsHandle))
@@ -247,7 +247,7 @@ namespace SCCoreSystems.SC_Graphics.SC_ShaderManager
 
 
             _SC_cloth_shader = new SC_cloth_shader();
-            if (!_SC_cloth_shader.Initialize(device, windowsHandle))
+            if (!_SC_cloth_shader.Initialize(device, windowsHandle, ConstantLightBufferCloth, _DLightBuffer_cloth))
                 return false;
 
             //////////////////////

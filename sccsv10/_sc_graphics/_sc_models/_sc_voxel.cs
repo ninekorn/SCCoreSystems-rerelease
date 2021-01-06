@@ -153,15 +153,11 @@ namespace _sc_core_systems.SC_Graphics
         public bool _is_static;
 
         int _addToWorld;
-
-        public int voxel_type { get; set; }
-
         public _sc_voxel() { }
 
-        public bool Initialize(SC_console_directx D3D, int width, int height, float tileSize, int divX, int divY, float _sizeX, float _sizeY, float _sizeZ, Vector4 color, int instX, int instY, int instZ, IntPtr windowsHandle, Matrix matroxer, int isTerrain, float offsetPosX, float offsetPosY, float offsetPosZ, World the_world, float mass, bool is_static, SC_console_directx.BodyTag _tag, int minx, int maxx, int miny, int maxy, int minz, int maxz, int ChunkWidth_L, int ChunkWidth_R, int ChunkHeight_L, int ChunkHeight_R, int ChunkDepth_L, int ChunkDepth_R, float planesize, Vector3 offset_pos, float maxDistance, float vertoffsetx, float vertoffsety, float vertoffsetz, int addToWorld,int _voxel_type)
+        public bool Initialize(SC_console_directx D3D, int width, int height, float tileSize, int divX, int divY, float _sizeX, float _sizeY, float _sizeZ, Vector4 color, int instX, int instY, int instZ, IntPtr windowsHandle, Matrix matroxer, int isTerrain, float offsetPosX, float offsetPosY, float offsetPosZ, World the_world, float mass, bool is_static, SC_console_directx.BodyTag _tag, int minx, int maxx, int miny, int maxy, int minz, int maxz, int ChunkWidth_L, int ChunkWidth_R, int ChunkHeight_L, int ChunkHeight_R, int ChunkDepth_L, int ChunkDepth_R, float planesize, Vector3 offset_pos, float maxDistance, float vertoffsetx, float vertoffsety, float vertoffsetz, int addToWorld)
         {
 
-            voxel_type = _voxel_type;
             _addToWorld = addToWorld;
 
             has_init = 0;
@@ -245,7 +241,7 @@ namespace _sc_core_systems.SC_Graphics
                 offsetPosY *= ChunkHeight * 0.0125f;
                 offsetPosZ *= ChunkDepth * 0.0125f;*/
                 //float planesize = 0.001f;
-                int _size_of_spike_end = 10;
+                /*int _size_of_spike_end = 10;
                 float _max_spike_length = 0.975f;
                 float _min_spike_length = 0.65f;
                 float _min_sphere_covid19_diameter = 0.45f;
@@ -262,7 +258,7 @@ namespace _sc_core_systems.SC_Graphics
                                            out _dvertexarray,
                                            out triangles,
                                            out map,
-                                           planesize, minx, maxx, miny, maxy, minz, maxz, ChunkWidth_L, ChunkWidth_R, ChunkHeight_L, ChunkHeight_L, ChunkDepth_L, ChunkDepth_R, maxDistance, vertoffsetx, vertoffsety, vertoffsetz, voxel_type);
+                                           planesize, minx, maxx, miny, maxy, minz, maxz, ChunkWidth_L, ChunkWidth_R, ChunkHeight_L, ChunkHeight_L, ChunkDepth_L, ChunkDepth_R, maxDistance, vertoffsetx, vertoffsety, vertoffsetz);
 
 
                     Vertices = new DVertex[_dvertexarray.Length];
@@ -285,13 +281,65 @@ namespace _sc_core_systems.SC_Graphics
                 }
 
 
-                _total_torso_width = (((ChunkWidth_L) * _sizeX * planesize * 8.25f));// + (offsetPosX * _sizeX) * 2); //2.25f
-                _total_torso_height = (((ChunkHeight_L) * _sizeY * planesize * 8.25f));// + (offsetPosY * _sizeY) * 2);
-                _total_torso_depth = (((ChunkDepth_L) * _sizeZ * planesize * 8.25f));//+ (offsetPosZ * _sizeZ) * 2);
+                _total_torso_width = (((ChunkWidth_L + ChunkWidth_R) * _sizeX * planesize * maxx * 2.25f));// + (offsetPosX * _sizeX) * 2);
+                _total_torso_height = (((ChunkHeight_L + ChunkHeight_R) * _sizeY * planesize * maxy * 2.25f));// + (offsetPosY * _sizeY) * 2);
+                _total_torso_depth = (((ChunkDepth_L + ChunkDepth_R) * _sizeZ * planesize * maxz * 2.25f));//+ (offsetPosZ * _sizeZ) * 2);
+                */
+
+                if (_tag == SC_console_directx.BodyTag._voxel_spheroid)
+                {
+                    int _size_of_spike_end = 10;
+                    float _max_spike_length = 0.975f;
+                    float _min_spike_length = 0.65f;
+                    float _min_sphere_covid19_diameter = 0.45f;
+                    float _min_spike_end = 0; //9.31415926535f // not sure that PI number crunched in is working...
+                    float _max_spike_end = 0; //10.31415926535f
+                    float _diameter_spike_end = 0;
+
+                    int voxel_type = 2;
+
+                    try
+                    {
+
+                        //same chunk for every godamn instances. and here is why i need my 1stversion program.
+                        _chunk.startBuildingArray(Vector3.Zero,
+                                               out _dvertexarray,
+                                               out triangles,
+                                               out map,
+                                               planesize, minx, maxx, miny, maxy, minz, maxz, ChunkWidth_L, ChunkWidth_R, ChunkHeight_L, ChunkHeight_L, ChunkDepth_L, ChunkDepth_R, maxDistance, vertoffsetx, vertoffsety, vertoffsetz, voxel_type);
 
 
-                /*Vertices = new[]7
-                {                                   
+                        Vertices = new DVertex[_dvertexarray.Length];
+
+                        for (int v = 0; v < _dvertexarray.Length; v++)
+                        {
+                            Vertices[v] = new DVertex
+                            {
+                                position = _dvertexarray[v].position,
+                                texture = _dvertexarray[v].texture,
+                                color = _dvertexarray[v].color,
+                                normal = _dvertexarray[v].normal,
+                            };
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                        MessageBox((IntPtr)0, ex.ToString(), "Oculus error", 0);
+                    }
+                    _total_torso_width = (((ChunkWidth_L + ChunkWidth_R) * _sizeX * planesize * maxx * 2.25f));// + (offsetPosX * _sizeX) * 2);
+                    _total_torso_height = (((ChunkHeight_L + ChunkHeight_R) * _sizeY * planesize * maxy * 2.25f));// + (offsetPosY * _sizeY) * 2);
+                    _total_torso_depth = (((ChunkDepth_L + ChunkDepth_R) * _sizeZ * planesize * maxz * 2.25f));//+ (offsetPosZ * _sizeZ) * 2);
+
+                    offsetPosX += ChunkWidth_L * 0.0125f;
+                    offsetPosY += ChunkHeight_L * 0.0125f;
+                    offsetPosZ += ChunkDepth_L * 0.0125f;
+                }
+                else
+                {
+
+                    Vertices = new[]
+                    {                                   
                     //TOP
                     new DVertex()
                     {
@@ -578,20 +626,26 @@ namespace _sc_core_systems.SC_Graphics
                      },
                  };
 
-                _total_torso_width = ((1 * _sizeX));
-                _total_torso_height = ((1 * _sizeY));
-                _total_torso_depth = ((1 * _sizeZ));
+                    _total_torso_width = ((1 * _sizeX));
+                    _total_torso_height = ((1 * _sizeY));
+                    _total_torso_depth = ((1 * _sizeZ));
 
+                    //_total_torso_width = (((ChunkWidth_L + ChunkWidth_R) * _sizeX * planesize * maxx * 2.25f));// + (offsetPosX * _sizeX) * 2);
+                    //_total_torso_height = (((ChunkHeight_L + ChunkHeight_R) * _sizeY * planesize * maxy * 2.25f));// + (offsetPosY * _sizeY) * 2);
+                    //_total_torso_depth = (((ChunkDepth_L + ChunkDepth_R) * _sizeZ * planesize * maxz * 2.25f));//+ (offsetPosZ * _sizeZ) * 2);
 
-                int[] triangles = new int[]
-                {
-                    5,4,3,2,1,0,
-                    11,10,9,8,7,6,
-                    17,16,15,14,13,12,
-                    23,22,21,20,19,18,
-                    29,28,27,26,25,24,
-                    35,34,33,32,31,30,
-                 };*/
+                    triangles = new int[]
+                    {
+                        5,4,3,2,1,0,
+                        11,10,9,8,7,6,
+                        17,16,15,14,13,12,
+                        23,22,21,20,19,18,
+                        29,28,27,26,25,24,
+                        35,34,33,32,31,30,
+                     };
+
+                }
+
 
 
 
@@ -600,13 +654,6 @@ namespace _sc_core_systems.SC_Graphics
                 //Console.WriteLine(triangles.Length + " " + Vertices.Length);
 
                 //MessageBox((IntPtr)0, triangles.Length + " " + Vertices.Length, "Oculus error", 0);
-                //fucking arrays sometimes they piss me off. not sure that this is the issue though.
-
-
-
-
-
-
 
                 int count = 0;
                 IndexCount = triangles.Length;
@@ -666,7 +713,7 @@ namespace _sc_core_systems.SC_Graphics
                             {
                                 //_cube.transform.Component.rigidbody = new RigidBody(new SphereShape(1)); //_sizeY * (ChunkWidth * 0.35f //39.2625f
                                 //_cube.transform.Component.rigidbody = new RigidBody(new SphereShape((_sizeY * ((ChunkWidth_L+ ChunkWidth_R) * 0.35f * planesize)) * 87.25f)); //_sizeY * (ChunkWidth * 0.35f //39.2625f
-                                _cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * ((ChunkWidth_L + ChunkWidth_R)) * 0.05f, _sizeY * ((ChunkHeight_L + ChunkHeight_R)) * 0.05f, _sizeZ * ((ChunkDepth_L + ChunkDepth_R))*0.05f));
+                                _cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * ((ChunkWidth_L + ChunkWidth_R))*planesize, _sizeY * ((ChunkHeight_L + ChunkHeight_R)) * planesize, _sizeZ * ((ChunkDepth_L + ChunkDepth_R)) * planesize));
                                 //_cube.transform.Component.rigidbody = new RigidBody(new BoxShape(planesize * 4, planesize * 4, planesize * 4));
 
                                 _cube.transform.Component.rigidbody.Position = new Jitter.LinearMath.JVector(_tempMatrix.M41, _tempMatrix.M42, _tempMatrix.M43);
@@ -694,10 +741,9 @@ namespace _sc_core_systems.SC_Graphics
  
                             }
                             else if(_addToWorld == 1)
-                            {
-                                //_cube.transform.Component.rigidbody = new RigidBody(new SphereShape(1)); //_sizeY * (ChunkWidth * 0.35f //39.2625f
+                            {  //_cube.transform.Component.rigidbody = new RigidBody(new SphereShape(1)); //_sizeY * (ChunkWidth * 0.35f //39.2625f
                                 //_cube.transform.Component.rigidbody = new RigidBody(new SphereShape((_sizeY * ((ChunkWidth_L+ ChunkWidth_R) * 0.35f * planesize)) * 87.25f)); //_sizeY * (ChunkWidth * 0.35f //39.2625f
-                                _cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * ((ChunkWidth_L + ChunkWidth_R)) * 0.05f, _sizeY * ((ChunkHeight_L + ChunkHeight_R)) * 0.05f, _sizeZ * ((ChunkDepth_L + ChunkDepth_R)) * 0.05f));
+                                _cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * ((ChunkWidth_L + ChunkWidth_R)) * planesize, _sizeY * ((ChunkHeight_L + ChunkHeight_R)) * planesize, _sizeZ * ((ChunkDepth_L + ChunkDepth_R)) * planesize));
                                 //_cube.transform.Component.rigidbody = new RigidBody(new BoxShape(planesize * 4, planesize * 4, planesize * 4));
 
                                 _cube.transform.Component.rigidbody.Position = new Jitter.LinearMath.JVector(_tempMatrix.M41, _tempMatrix.M42, _tempMatrix.M43);
@@ -725,11 +771,19 @@ namespace _sc_core_systems.SC_Graphics
                             }
                             else if (_addToWorld == 2)
                             {
+                                if (_tag == SC_console_directx.BodyTag._voxel_spheroid)
+                                {
+                                    _cube.transform.Component.rigidbody = new RigidBody(new SphereShape((_sizeY * ((ChunkWidth_L + ChunkWidth_R) * 0.35f * planesize)) * 87.25f));
+                                }
+                                else
+                                {
+                                    _cube.transform.Component.rigidbody = new RigidBody(new BoxShape(((ChunkWidth_L + ChunkWidth_R)) *_sizeX*planesize, ((ChunkHeight_L + ChunkHeight_R))  * _sizeY * planesize, ((ChunkDepth_L + ChunkDepth_R))  * _sizeZ * planesize));
+                                }
                                 //_cube.transform.Component.rigidbody = new RigidBody(new SphereShape(1)); //_sizeY * (ChunkWidth * 0.35f //39.2625f
                                 //_cube.transform.Component.rigidbody = new RigidBody(new SphereShape((_sizeY * ((ChunkWidth_L+ ChunkWidth_R) * 0.35f * planesize)) * 87.25f)); //_sizeY * (ChunkWidth * 0.35f //39.2625f
                                 //_cube.transform.Component.rigidbody = new RigidBody(new BoxShape(((ChunkWidth_L + ChunkWidth_R)) * planesize, ((ChunkHeight_L + ChunkHeight_R)) * planesize, ((ChunkDepth_L + ChunkDepth_R)) * planesize));
                                 //_cube.transform.Component.rigidbody = new RigidBody(new BoxShape(planesize * 4, planesize * 4, planesize * 4));
-                                _cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * ((ChunkWidth_L + ChunkWidth_R)) * 0.05f, _sizeY * ((ChunkHeight_L + ChunkHeight_R)) * 0.05f, _sizeZ * ((ChunkDepth_L + ChunkDepth_R)) * 0.05f));
+                                //_cube.transform.Component.rigidbody = new RigidBody(new BoxShape(((ChunkWidth_L + ChunkWidth_R)) *_sizeX*planesize, ((ChunkHeight_L + ChunkHeight_R))  * _sizeY * planesize, ((ChunkDepth_L + ChunkDepth_R))  * _sizeZ * planesize));
 
                                 _cube.transform.Component.rigidbody.Position = new Jitter.LinearMath.JVector(_tempMatrix.M41, _tempMatrix.M42, _tempMatrix.M43);
                                 _cube.transform.Component.rigidbody.Orientation = Conversion.ToJitterMatrix(_tempMatrix);

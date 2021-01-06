@@ -91,8 +91,8 @@ namespace _sc_core_systems
         //END OF
 
         //SCREEN SETTINGS
-        int _inst_screen_x = 200;
-        int _inst_screen_y = 200;
+        int _inst_screen_x = 100;
+        int _inst_screen_y = 100;
         int _inst_screen_z = 1;
 
         float _screen_size_x = 2; //0.0115f //1.5f
@@ -121,9 +121,9 @@ namespace _sc_core_systems
         //having 36 vertices each and 72 triangles each but at that point it will also lag. will try later to improve the performance.
         float _voxel_mass = 100;
 
-        int _inst_voxel_cube_x = 10;
-        int _inst_voxel_cube_y = 10;
-        int _inst_voxel_cube_z = 10;
+        int _inst_voxel_cube_x = 7;
+        int _inst_voxel_cube_y = 7;
+        int _inst_voxel_cube_z = 7;
 
         float _voxel_cube_size_x = 0.015f; //0.0115f
         float _voxel_cube_size_y = 0.015f; //0.0115f
@@ -133,9 +133,9 @@ namespace _sc_core_systems
         int voxel_type = -1;
 
         //PHYSICS CUBES
-        int _inst_cube_x = 50;
-        int _inst_cube_y = 50;
-        int _inst_cube_z = 50;
+        int _inst_cube_x = 4;
+        int _inst_cube_y = 10;
+        int _inst_cube_z = 4;
         float _cube_size_x = 0.015f; //0.0115f //1.5f
         float _cube_size_y = 0.015f; //0.0115f //1.5f
         float _cube_size_z = 0.015f;
@@ -244,7 +244,7 @@ namespace _sc_core_systems
 
 
 
-        SC_AI.data_input main_ai_2d_data_input;
+        //SC_AI.data_input main_ai_2d_data_input;
         string short_path = "";
 
 
@@ -784,7 +784,7 @@ namespace _sc_core_systems
             try
             {
 
-                main_ai_2d_data_input = new SC_AI.data_input();
+                //main_ai_2d_data_input = new SC_AI.data_input();
 
                 //for (int s = 0; s < _sound_byte_array_lift.Length; s++)
                 //{
@@ -976,7 +976,7 @@ namespace _sc_core_systems
                                 voxel_general_size = 0.0035f;
                                 voxel_type = 0;
                                 is_static = false;
-                                var _hasinit00 = _sc_voxel_spheroid.Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, _voxel_cube_size_x, _voxel_cube_size_y, _voxel_cube_size_z, new Vector4(r, g, b, a), _inst_voxel_cube_x, _inst_voxel_cube_y, _inst_voxel_cube_z, Hwnd, _object_worldmatrix, 2, offsetPosX, offsetPosY, offsetPosZ, World, _voxel_mass, is_static, SC_console_directx.BodyTag._voxel_spheroid, 2, 2, 2, 2, 2, 2, 50, 49, 50, 49, 50, 49, voxel_general_size, Vector3.Zero, 250,0,0,0,2, voxel_type); //, "terrainGrassDirt.bmp" //0.00035f
+                                var _hasinit00 = _sc_voxel_spheroid.Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, _voxel_cube_size_x, _voxel_cube_size_y, _voxel_cube_size_z, new Vector4(r, g, b, a), _inst_voxel_cube_x, _inst_voxel_cube_y, _inst_voxel_cube_z, Hwnd, _object_worldmatrix, 2, offsetPosX, offsetPosY, offsetPosZ, World, _voxel_mass, is_static, SC_console_directx.BodyTag._voxel_spheroid, 2, 2, 2, 2, 2, 2, 50, 49, 50, 49, 50, 49, voxel_general_size, Vector3.Zero, 250,0,0,0,2); //, "terrainGrassDirt.bmp" //0.00035f
                                 _world_voxel_cube_lists[_index] = _sc_voxel_spheroid;
 
                                 worldMatrix_instances_voxel_cube[_index] = new Matrix[_inst_voxel_cube_x * _inst_voxel_cube_y * _inst_voxel_cube_z];
@@ -993,8 +993,8 @@ namespace _sc_core_systems
 
 
 
+                            voxel_general_size = 0.1f;
 
-                            
                             /*//TERRAIN TILES
                             r = 0.75f;
                             g = 0.75f;
@@ -1039,7 +1039,7 @@ namespace _sc_core_systems
 
 
 
-                            
+
                             //rgba(228, 120, 51, 1) ZEST ORANGE
                             //rgba(242, 121, 53, 1) JAFFA ORANGE
 
@@ -1060,7 +1060,7 @@ namespace _sc_core_systems
 
                             _object_worldmatrix = WorldMatrix;
 
-                            _object_worldmatrix.M41 = 1.5f + x + 25;
+                            _object_worldmatrix.M41 = 1.5f + x - 3;
                             _object_worldmatrix.M42 = 0.5f + y;
                             _object_worldmatrix.M43 = 1.5f + z;
 
@@ -1131,14 +1131,14 @@ namespace _sc_core_systems
                             _mass = 100;
                             vertoffsetx = 0;
                             vertoffsety = 0;
-                            vertoffsetz = -13;
+                            vertoffsetz = 0;// -13;
                             _player_rght_hnd[_index] = new _sc_voxel();
                             voxel_general_size = 0.0025f;
                             voxel_type = 1;
                             _type_of_cube = 2;
                             is_static = true;
                             //_player_rght_hnd[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.0125f, 0.035f, 0.055f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, 2, offsetPosX, offsetPosY, offsetPosZ, World, SC_console_directx.BodyTag.PlayerHandRight, _static, 1, _mass, 0, 0, -0.75f); //, "terrainGrassDirt.bmp" //0.00035f
-                            _player_rght_hnd[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.0125f, 0.035f, 0.055f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, is_static, SC_console_directx.BodyTag.PlayerHandRight, 9, 9, 9, 18, 9, 9, 4, 3, 13, 12, 18, 17, voxel_general_size, new Vector3(0, 0, -0.1f), 75, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld, voxel_type); //, "terrainGrassDirt.bmp" //0.00035f
+                            _player_rght_hnd[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.0125f, 0.035f, 0.055f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, is_static, SC_console_directx.BodyTag.PlayerHandRight, 9, 9, 9, 18, 9, 9, 4, 3, 13, 12, 18, 17, voxel_general_size, new Vector3(0, 0, -0.1f), 75, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld); //, "terrainGrassDirt.bmp" //0.00035f
 
                             worldMatrix_instances_r_hand[_index] = new Matrix[_inst_p_r_hand_x * _inst_p_r_hand_y * _inst_p_r_hand_z];
                             for (int i = 0; i < worldMatrix_instances_r_hand[_index].Length; i++)
@@ -1177,9 +1177,9 @@ namespace _sc_core_systems
 
                             vertoffsetx = 0;
                             vertoffsety = 0;
-                            vertoffsetz = -13;
+                            vertoffsetz = 0;
 
-                            _player_lft_hnd[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.0125f, 0.035f, 0.055f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, is_static, SC_console_directx.BodyTag.PlayerHandLeft, 9, 9, 9, 18, 9, 9, 4, 3, 13, 12, 18, 17, voxel_general_size, new Vector3(0, 0, -0.1f), 75, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld, voxel_type); //, "terrainGrassDirt.bmp" //0.00035f
+                            _player_lft_hnd[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.0125f, 0.035f, 0.055f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, is_static, SC_console_directx.BodyTag.PlayerHandLeft, 9, 9, 9, 18, 9, 9, 4, 3, 13, 12, 18, 17, voxel_general_size, new Vector3(0, 0, -0.1f), 75, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld); //, "terrainGrassDirt.bmp" //0.00035f
 
                             worldMatrix_instances_l_hand[_index] = new Matrix[_inst_p_l_hand_x * _inst_p_l_hand_y * _inst_p_l_hand_z];
                             for (int i = 0; i < worldMatrix_instances_l_hand[_index].Length; i++)
@@ -1219,7 +1219,7 @@ namespace _sc_core_systems
                             _type_of_cube = 2;
                             _mass = 100;
                             _player_torso[_index] = new _sc_voxel();
-                            _player_torso[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.125f, 0.175f, 0.065f, new Vector4(r, g, b, a), _inst_p_torso_x, _inst_p_torso_y, _inst_p_torso_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, is_static, SC_console_directx.BodyTag.PlayerTorso, 2, 9, 2, 2, 2, 2, 45, 44, 60, 59, 10, 9, voxel_general_size, new Vector3(0, 0, 0), 500, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld, voxel_type); //, "terrainGrassDirt.bmp" //0.00035f
+                            _player_torso[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.125f, 0.175f, 0.065f, new Vector4(r, g, b, a), _inst_p_torso_x, _inst_p_torso_y, _inst_p_torso_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, is_static, SC_console_directx.BodyTag.PlayerTorso, 2, 9, 2, 2, 2, 2, 45, 44, 60, 59, 10, 9, voxel_general_size, new Vector3(0, 0, 0), 500, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld); //, "terrainGrassDirt.bmp" //0.00035f
 
                             //_player_torso[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.125f, 0.175f, 0.065f, new Vector4(r, g, b, a), _inst_p_torso_x, _inst_p_torso_y, _inst_p_torso_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerTorso, 2, 9, 2, 2, 2, 2, 45, 44, 60, 59, 10, 9, 0.0025f, new Vector3(0, 0, 0), 500); //, "terrainGrassDirt.bmp" //0.00035f
 
@@ -1260,7 +1260,7 @@ namespace _sc_core_systems
                             _mass = 100;
                             _player_pelvis[_index] = new _sc_voxel();
                             //_player_pelvis[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.125f, 0.05f, 0.065f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerPelvis, 10, 10, 10, 10, 10, 10, 4, 3, 20, 19, 20, 19, 0.0025f, Vector3.Zero, 300); //, "terrainGrassDirt.bmp" //0.00035f
-                            _player_pelvis[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.125f, 0.05f, 0.065f, new Vector4(r, g, b, a), _inst_p_pelvis_x, _inst_p_pelvis_y, _inst_p_pelvis_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, is_static, SC_console_directx.BodyTag.PlayerPelvis, 2, 9, 2, 2, 2, 2, 45, 44, 24, 23, 10, 9, voxel_general_size, Vector3.Zero, 150, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld, voxel_type); //, "terrainGrassDirt.bmp" //0.00035f
+                            _player_pelvis[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.125f, 0.05f, 0.065f, new Vector4(r, g, b, a), _inst_p_pelvis_x, _inst_p_pelvis_y, _inst_p_pelvis_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, is_static, SC_console_directx.BodyTag.PlayerPelvis, 2, 9, 2, 2, 2, 2, 45, 44, 24, 23, 10, 9, voxel_general_size, Vector3.Zero, 150, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld); //, "terrainGrassDirt.bmp" //0.00035f
 
                             worldMatrix_instances_pelvis[_index] = new Matrix[_inst_p_pelvis_x * _inst_p_pelvis_y * _inst_p_pelvis_z];
                             for (int i = 0; i < worldMatrix_instances_pelvis[_index].Length; i++)
@@ -1304,7 +1304,7 @@ namespace _sc_core_systems
 
                             _player_rght_shldr[_index] = new _sc_voxel();
                             //_player_rght_shldr[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerShoulderRight, 10, 10, 10, 10, 10, 10, 4, 3, 20, 19, 20, 19, 0.0025f, Vector3.Zero, 300); //, "terrainGrassDirt.bmp" //0.00035f
-                            _player_rght_shldr[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_l_shoulder_x, _inst_p_l_shoulder_y, _inst_p_l_shoulder_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, is_static, SC_console_directx.BodyTag.PlayerShoulderRight, 9, 9, 9, 9, 9, 9, 20, 19, 20, 19, 20, 19, voxel_general_size, new Vector3(0, 0, 0), 17, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld, voxel_type); //, "terrainGrassDirt.bmp" //0.00035f
+                            _player_rght_shldr[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_l_shoulder_x, _inst_p_l_shoulder_y, _inst_p_l_shoulder_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, is_static, SC_console_directx.BodyTag.PlayerShoulderRight, 9, 9, 9, 9, 9, 9, 20, 19, 20, 19, 20, 19, voxel_general_size, new Vector3(0, 0, 0), 17, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld); //, "terrainGrassDirt.bmp" //0.00035f
 
 
                             worldMatrix_instances_r_shoulder[_index] = new Matrix[_inst_p_r_shoulder_x * _inst_p_r_shoulder_y * _inst_p_r_shoulder_z];
@@ -1341,7 +1341,7 @@ namespace _sc_core_systems
 
                             _player_lft_shldr[_index] = new _sc_voxel();
                             //_player_lft_shldr[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerShoulderLeft, 10, 10, 10, 10, 10, 10, 4, 3, 20, 19, 20, 19, 0.0025f, Vector3.Zero, 300); //, "terrainGrassDirt.bmp" //0.00035f
-                            _player_lft_shldr[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_l_shoulder_x, _inst_p_l_shoulder_y, _inst_p_l_shoulder_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, is_static, SC_console_directx.BodyTag.PlayerShoulderLeft, 9, 9, 9, 9, 9, 9, 20, 19, 20, 19, 20, 19, voxel_general_size, new Vector3(0, 0, 0), 17, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld, voxel_type); //, "terrainGrassDirt.bmp" //0.00035f
+                            _player_lft_shldr[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_l_shoulder_x, _inst_p_l_shoulder_y, _inst_p_l_shoulder_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, is_static, SC_console_directx.BodyTag.PlayerShoulderLeft, 9, 9, 9, 9, 9, 9, 20, 19, 20, 19, 20, 19, voxel_general_size, new Vector3(0, 0, 0), 17, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld); //, "terrainGrassDirt.bmp" //0.00035f
 
                             worldMatrix_instances_l_shoulder[_index] = new Matrix[_inst_p_l_shoulder_x * _inst_p_l_shoulder_y * _inst_p_l_shoulder_z];
                             for (int i = 0; i < worldMatrix_instances_l_shoulder[_index].Length; i++)
@@ -1418,7 +1418,7 @@ namespace _sc_core_systems
                             _type_of_cube = 2;
                             _player_lft_lower_arm[_index] = new _sc_voxel();
                             // _player_lft_lower_arm[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerLowerArmLeft, 10, 10, 10, 10, 10, 10, 4, 3, 20, 19, 20, 19, 0.0025f, Vector3.Zero, 300); //, "terrainGrassDirt.bmp" //0.00035f
-                            _player_lft_lower_arm[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.035f, 0.08250f, 0.035f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerLowerArmLeft, 9, 9, 9, 18, 9, 9, 9, 10, 30, 29, 11, 10, voxel_general_size, new Vector3(0, 0, 0), 75, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld, voxel_type); //, "terrainGrassDirt.bmp" //0.00035f
+                            _player_lft_lower_arm[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.035f, 0.08250f, 0.035f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerLowerArmLeft, 9, 9, 9, 18, 9, 9, 9, 10, 30, 29, 11, 10, voxel_general_size, new Vector3(0, 0, 0), 75, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld); //, "terrainGrassDirt.bmp" //0.00035f
 
 
 
@@ -1455,7 +1455,7 @@ namespace _sc_core_systems
                             _type_of_cube = 2;
                             _player_lft_upper_arm[_index] = new _sc_voxel();
                             //_player_lft_upper_arm[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerUpperArmLeft, 10, 10, 10, 10, 10, 10, 4, 3, 20, 19, 20, 19, 0.0025f, Vector3.Zero, 300); //, "terrainGrassDirt.bmp" //0.00035f
-                            _player_lft_upper_arm[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.035f, 0.10550f, 0.035f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerUpperArmLeft, 9, 9, 9, 18, 13, 9, 9, 10, 40, 39, 11, 10, voxel_general_size, new Vector3(0, 0, 0), 100, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld, voxel_type); //, "terrainGrassDirt.bmp" //0.00035f
+                            _player_lft_upper_arm[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.035f, 0.10550f, 0.035f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerUpperArmLeft, 9, 9, 9, 18, 13, 9, 9, 10, 40, 39, 11, 10, voxel_general_size, new Vector3(0, 0, 0), 100, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld); //, "terrainGrassDirt.bmp" //0.00035f
 
 
 
@@ -1502,7 +1502,7 @@ namespace _sc_core_systems
                             _type_of_cube = 2;
                             _player_rght_lower_arm[_index] = new _sc_voxel();
                             //_player_rght_lower_arm[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerLowerArmRight, 10, 10, 10, 10, 10, 10, 4, 3, 20, 19, 20, 19, 0.0025f, Vector3.Zero, 300); //, "terrainGrassDirt.bmp" //0.00035f
-                            _player_rght_lower_arm[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.035f, 0.08250f, 0.035f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerLowerArmRight, 9, 9, 9, 18, 9, 9, 9, 10, 30, 29, 11, 10, voxel_general_size, new Vector3(0, 0, 0), 75, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld, voxel_type); //, "terrainGrassDirt.bmp" //0.00035f
+                            _player_rght_lower_arm[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.035f, 0.08250f, 0.035f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerLowerArmRight, 9, 9, 9, 18, 9, 9, 9, 10, 30, 29, 11, 10, voxel_general_size, new Vector3(0, 0, 0), 75, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld); //, "terrainGrassDirt.bmp" //0.00035f
 
 
                             worldMatrix_instances_r_lowerarm[_index] = new Matrix[_inst_p_r_lowerarm_x * _inst_p_r_lowerarm_y * _inst_p_r_lowerarm_z];
@@ -1533,7 +1533,7 @@ namespace _sc_core_systems
                             _type_of_cube = 2;
                             _player_rght_upper_arm[_index] = new _sc_voxel();
                             //_player_rght_upper_arm[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerUpperArmRight, 10, 10, 10, 10, 10, 10, 4, 3, 20, 19, 20, 19, 0.0025f, Vector3.Zero, 300); //, "terrainGrassDirt.bmp" //0.00035f
-                            _player_rght_upper_arm[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.035f, 0.10550f, 0.035f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerUpperArmRight, 9, 9, 9, 18, 13, 9, 9, 10, 40, 39, 11, 10, voxel_general_size, new Vector3(0, 0, 0), 100, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld, voxel_type); //, "terrainGrassDirt.bmp" //0.00035f
+                            _player_rght_upper_arm[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.035f, 0.10550f, 0.035f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerUpperArmRight, 9, 9, 9, 18, 13, 9, 9, 10, 40, 39, 11, 10, voxel_general_size, new Vector3(0, 0, 0), 100, vertoffsetx, vertoffsety, vertoffsetz, _addToWorld); //, "terrainGrassDirt.bmp" //0.00035f
 
 
 
@@ -1574,7 +1574,7 @@ namespace _sc_core_systems
                             voxel_type = 1;
                             _type_of_cube = 2;
                             _player_rght_elbow_target[_index] = new _sc_voxel();
-                            _player_rght_elbow_target[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerRightElbowTarget, 2, 2, 2, 2, 2, 2, 10, 9, 10, 9, 10, 9, voxel_general_size, Vector3.Zero, 25, vertoffsetx, vertoffsety, vertoffsetz, 0, voxel_type); //, "terrainGrassDirt.bmp" //0.00035f
+                            _player_rght_elbow_target[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerRightElbowTarget, 2, 2, 2, 2, 2, 2, 10, 9, 10, 9, 10, 9, voxel_general_size, Vector3.Zero, 25, vertoffsetx, vertoffsety, vertoffsetz, 0); //, "terrainGrassDirt.bmp" //0.00035f
 
 
                             worldMatrix_instances_r_elbow_target[_index] = new Matrix[_inst_p_r_hand_x * _inst_p_r_hand_y * _inst_p_r_hand_z];
@@ -1612,7 +1612,7 @@ namespace _sc_core_systems
                             voxel_type = 1;
                             _type_of_cube = 2;
                             _player_lft_elbow_target[_index] = new _sc_voxel();
-                            _player_lft_elbow_target[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerLeftElbowTarget, 2, 2, 2, 2, 2, 2, 10, 9, 10, 9, 10, 9, voxel_general_size, Vector3.Zero, 25, vertoffsetx, vertoffsety, vertoffsetz, 0, voxel_type); //, "terrainGrassDirt.bmp" //0.00035f
+                            _player_lft_elbow_target[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerLeftElbowTarget, 2, 2, 2, 2, 2, 2, 10, 9, 10, 9, 10, 9, voxel_general_size, Vector3.Zero, 25, vertoffsetx, vertoffsety, vertoffsetz, 0); //, "terrainGrassDirt.bmp" //0.00035f
 
 
 
@@ -1652,7 +1652,7 @@ namespace _sc_core_systems
                             voxel_type = 1;
                             _type_of_cube = 2;
                             _player_rght_elbow_target_two[_index] = new _sc_voxel();
-                            _player_rght_elbow_target_two[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerRightElbowTargettwo, 2, 2, 2, 2, 2, 2, 10, 9, 10, 9, 10, 9, voxel_general_size, Vector3.Zero, 75, vertoffsetx, vertoffsety, vertoffsetz, 0, voxel_type); //, "terrainGrassDirt.bmp" //0.00035f
+                            _player_rght_elbow_target_two[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerRightElbowTargettwo, 2, 2, 2, 2, 2, 2, 10, 9, 10, 9, 10, 9, voxel_general_size, Vector3.Zero, 75, vertoffsetx, vertoffsety, vertoffsetz, 0); //, "terrainGrassDirt.bmp" //0.00035f
 
 
                             worldMatrix_instances_r_elbow_target_two[_index] = new Matrix[_inst_p_r_hand_x * _inst_p_r_hand_y * _inst_p_r_hand_z];
@@ -1684,7 +1684,7 @@ namespace _sc_core_systems
                             voxel_type = 1;
                             _type_of_cube = 2;
                             _player_lft_elbow_target_two[_index] = new _sc_voxel();
-                            _player_lft_elbow_target_two[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerLeftElbowTargettwo, 2, 2, 2, 2, 2, 2, 10, 9, 10, 9, 10, 9, voxel_general_size, Vector3.Zero, 75, vertoffsetx, vertoffsety, vertoffsetz, 0, voxel_type); //, "terrainGrassDirt.bmp" //0.00035f
+                            _player_lft_elbow_target_two[_index].Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, 1, 1, 1, 0.05f, 0.05f, 0.05f, new Vector4(r, g, b, a), _inst_p_r_hand_x, _inst_p_r_hand_y, _inst_p_r_hand_z, Hwnd, _tempMatroxer, _type_of_cube, offsetPosX, offsetPosY, offsetPosZ, World, _mass, false, SC_console_directx.BodyTag.PlayerLeftElbowTargettwo, 2, 2, 2, 2, 2, 2, 10, 9, 10, 9, 10, 9, voxel_general_size, Vector3.Zero, 75, vertoffsetx, vertoffsety, vertoffsetz, 0); //, "terrainGrassDirt.bmp" //0.00035f
 
                             worldMatrix_instances_l_elbow_target_two[_index] = new Matrix[_inst_p_l_hand_x * _inst_p_l_hand_y * _inst_p_l_hand_z];
                             for (int i = 0; i < worldMatrix_instances_l_elbow_target_two[_index].Length; i++)
@@ -6183,7 +6183,7 @@ namespace _sc_core_systems
 
 
 
-
+                                
 
                                 //Console.WriteLine(Console.Title );
 
@@ -6205,7 +6205,7 @@ namespace _sc_core_systems
                                 _cuber_01.Render(D3D.device.ImmediateContext);
                                 _shaderManager._rend_lft_elbow_targ_two(D3D.device.ImmediateContext, _cuber_01.IndexCount, _cuber_01.InstanceCount, _cuber_01._POSITION, viewMatrix, _projectionMatrix, null, _SC_modL_lft_hnd_BUFFER, oculusRiftDir, _cuber_01);
                                 */
-                                Console.Title = _SystemTickPerformance.Elapsed.Ticks + "";
+                                //Console.Title = _SystemTickPerformance.Elapsed.Ticks + "";
 
                                 /*
                                 //HEAD

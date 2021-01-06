@@ -1,161 +1,94 @@
-﻿using SharpDX.Direct3D11;
-using SharpDX.WIC;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System;
-
-using SharpDX;
+﻿using SharpDX;
 using SharpDX.D3DCompiler;
+using SharpDX.Direct3D11;
+using System;
 using System.Runtime.InteropServices;
-//using System.Windows.Forms;
-//using SharpHelper;
-using SharpDX.DXGI;
-using SharpDX.Direct3D;
+using Device = SharpDX.Direct3D11.Device;
 
-namespace SCCoreSystems
+using SCCoreSystems.sc_console;
+
+
+namespace SCCoreSystems.SC_Graphics
 {
-    public class SC_cloth_shader                   // 199 lines
+    public class SC_cloth_shader                 // 228 lines
     {
-        public DVertex[] Vertices { get; set; }
-        public int[] indices;
+        GeometryShader GeometryShader;
 
-
-        public SharpDX.Vector3 Position { get; set; }
-        public SharpDX.Quaternion Rotation { get; set; }
-        public SharpDX.Vector3 Forward { get; set; }
-
-        private float _sizeX = 0;
-        private float _sizeY = 0;
-        private float _sizeZ = 0;
-
-
-        public SharpDX.Matrix _MatrixPos { get; set; }
-
-        public Vector4 _color;
+        DataStream mappedResource;
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct DInstanceType
+        internal struct DMatrixBuffer
         {
-            public Vector3 position;
-            //public Matrix worldMatrix;
-        };
-        float InstanceCount = 0;
-
-        DInstanceType[] instances;
-
-
-
-
-
-
-
-
-        // Structures.
-        [StructLayout(LayoutKind.Sequential)]
-        public struct DVertex
-        {
-            public static int AppendAlignedElement = 12;
-            public Vector3 position;
-            public Vector4 color;
-            //public Vector3 normal;
+            public Matrix world;
+            public Matrix view;
+            public Matrix projection;
         }
 
+        public VertexShader VertexShader { get; set; }
+        public PixelShader PixelShader { get; set; }
+        public InputLayout Layout { get; set; }
+        public SharpDX.Direct3D11.Buffer ConstantMatrixBuffer { get; set; }
+        public SamplerState SamplerState { get; set; }
 
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct DMatrixBuffer
+        public SC_cloth_shader()
         {
-            //public Matrix world;
-            //public Matrix view;
-            //public Matrix projection;
-            public Matrix worldViewProjection;
+
         }
 
+        public SharpDX.Direct3D11.Buffer _constantLightBuffer;
 
+        public SCCoreSystems.SC_Graphics.SC_jitter_cloth.DLightBuffer[] _DLightBuffer;
 
-
-
-
-
-
-
-        // Properties.
-        private VertexShader VertexShader { get; set; }
-        private PixelShader PixelShader { get; set; }
-        private GeometryShader GeometryShader { get; set; }
-        private SamplerState SamplerState { get; set; }
-
-        private InputLayout Layout { get; set; }
-        private SharpDX.Direct3D11.Buffer ConstantMatrixBuffer { get; set; }
-
-        // Constructor
-        public SC_cloth_shader() { }
-
-        // Methods.
-        public bool Initialize(SharpDX.Direct3D11.Device device, IntPtr windowsHandle) //, float x, float y, float z, Vector4 color,Matrix worldMatrix
+        public bool Initialize(Device device, IntPtr windowsHandler, SharpDX.Direct3D11.Buffer ConstantLightBuffer, SCCoreSystems.SC_Graphics.SC_jitter_cloth.DLightBuffer[] DLightBuffer)
         {
-            //this._color = color;
-            //this._sizeX = x;
-            //this._sizeY = y;
-            //this._sizeZ = z;
-
-            // Initialize the vertex and pixel shaders.
-            return InitializeShader(device, windowsHandle); // @"Tut04\Shaders\Color.ps" //, "Color.vs", "Color.ps"
+            this._DLightBuffer = DLightBuffer;
+            this._constantLightBuffer = ConstantLightBuffer;
+            return InitializeShader(device, windowsHandler, "texture.vs", "texture.ps");
         }
-
 
         ShaderBytecode vertexShaderByteCode;
         ShaderBytecode pixelShaderByteCode;
         ShaderBytecode geometryShaderByteCode;
 
-        private bool InitializeShader(SharpDX.Direct3D11.Device device, IntPtr windowsHandle) //, string vsFileName, string psFileName //, Matrix worldMatrix
+
+        private bool InitializeShader(Device device, IntPtr windowsHandler, string vsFileName, string psFileName)
         {
             try
             {
-                var vsFileNameByteArray = "../../../sc_instance_shader/" + "red.vs";
-                var psFileNameByteArray = "../../../sc_instance_shader/" + "red.ps";
+                vsFileName = "../../../sc_instance_shader/" + "texture.vs";
+                psFileName = "../../../sc_instance_shader/" + "texture.ps";
                 var gsFileNameByteArray = "../../../sc_instance_shader/" + "HLSL.gs";
 
-                vertexShaderByteCode = ShaderBytecode.CompileFromFile(vsFileNameByteArray, "ColorVertexShader", "vs_4_0", ShaderFlags.None, SharpDX.D3DCompiler.EffectFlags.None);
-                pixelShaderByteCode = ShaderBytecode.CompileFromFile(psFileNameByteArray, "ColorPixelShader", "ps_4_0", ShaderFlags.None, SharpDX.D3DCompiler.EffectFlags.None);
+                vertexShaderByteCode = ShaderBytecode.CompileFromFile(vsFileName, "TextureVertexShader", "vs_4_0", ShaderFlags.None, SharpDX.D3DCompiler.EffectFlags.None);
+                pixelShaderByteCode = ShaderBytecode.CompileFromFile(psFileName, "TexturePixelShader", "ps_4_0", ShaderFlags.None, SharpDX.D3DCompiler.EffectFlags.None);
                 geometryShaderByteCode = ShaderBytecode.CompileFromFile(gsFileNameByteArray, "GS", "gs_5_0", ShaderFlags.None, EffectFlags.None);
 
-                /*
-                if (Program.is_wpf == 1)
-                {
-                    var vsFileNameByteArray = SCCoreSystems.Properties.Resources.red1;
-                    var psFileNameByteArray = SCCoreSystems.Properties.Resources.red;
-                    var gsFileNameByteArray = SCCoreSystems.Properties.Resources.HLSL;
-                    vertexShaderByteCode = ShaderBytecode.Compile(vsFileNameByteArray, "ColorVertexShader", "vs_5_0", ShaderFlags.None, EffectFlags.None);
-                    pixelShaderByteCode = ShaderBytecode.Compile(psFileNameByteArray, "ColorPixelShader", "ps_5_0", ShaderFlags.None, EffectFlags.None);
-                    geometryShaderByteCode = ShaderBytecode.Compile(gsFileNameByteArray, "GS", "gs_5_0", ShaderFlags.None, EffectFlags.None);
 
+
+                /*
+                if (MainWindow.is_wpf == 1)
+                {
+                    vsFileName = SCCoreSystems.Properties.Resources.texture1;// "../../../_sc_instance_shader/" + "texture.vs";
+                    psFileName = SCCoreSystems.Properties.Resources.texture;// "../../../_sc_instance_shader/" + "texture.ps";
+                    var gsFileName = SCCoreSystems.Properties.Resources.HLSL;
+
+                    vertexShaderByteCode = ShaderBytecode.Compile(vsFileName, "TextureVertexShader", "vs_4_0", ShaderFlags.None, SharpDX.D3DCompiler.EffectFlags.None);
+                    pixelShaderByteCode = ShaderBytecode.Compile(psFileName, "TexturePixelShader", "ps_4_0", ShaderFlags.None, SharpDX.D3DCompiler.EffectFlags.None);
+                    geometryShaderByteCode = ShaderBytecode.Compile(gsFileName, "GS", "gs_5_0", ShaderFlags.None, EffectFlags.None);
                 }
                 else
                 {
-                   
-                }*/
-
-                //ShaderBytecode vertexShaderByteCode = ShaderBytecode.Compile(gsFileNameByteArray, "VS", "vs_5_0", ShaderFlags.None, EffectFlags.None);
-                //ShaderBytecode pixelShaderByteCode = ShaderBytecode.Compile(gsFileNameByteArray, "PS", "ps_5_0", ShaderFlags.None, EffectFlags.None);
+                   }*/
 
 
-                // Create the vertex shader from the buffer.
                 VertexShader = new VertexShader(device, vertexShaderByteCode);
-                // Create the pixel shader from the buffer.
                 PixelShader = new PixelShader(device, pixelShaderByteCode);
-
                 GeometryShader = new GeometryShader(device, geometryShaderByteCode);
-                // Now setup the layout of the data that goes into the shader.
-                // This setup needs to match the VertexType structure in the Model and in the shader.
 
 
 
                 InputElement[] inputElements = new InputElement[]
                 {
-                    //new InputElement("POSITION", 0, SharpDX.DXGI.Format.R32G32B32_Float, 0, 0)
-
                     new InputElement()
                     {
                         SemanticName = "POSITION",
@@ -163,6 +96,16 @@ namespace SCCoreSystems
                         Format = SharpDX.DXGI.Format.R32G32B32_Float,
                         Slot = 0,
                         AlignedByteOffset = 0,
+                        Classification = InputClassification.PerVertexData,
+                        InstanceDataStepRate = 0
+                    },
+                    new InputElement()
+                    {
+                        SemanticName = "TEXCOORD",
+                        SemanticIndex = 0,
+                        Format = SharpDX.DXGI.Format.R32G32_Float,
+                        Slot = 0,
+                        AlignedByteOffset = InputElement.AppendAligned,
                         Classification = InputClassification.PerVertexData,
                         InstanceDataStepRate = 0
                     },
@@ -176,69 +119,77 @@ namespace SCCoreSystems
                         Classification = InputClassification.PerVertexData,
                         InstanceDataStepRate = 0
                     },
-
-                     new InputElement()
+                    new InputElement()
                     {
-                        SemanticName = "TEXCOORD",
+                        SemanticName = "NORMAL",
+                        SemanticIndex = 0,
+                        Format = SharpDX.DXGI.Format.R32G32B32_Float,
+                        Slot = 0,
+                        AlignedByteOffset = InputElement.AppendAligned,
+                        Classification = InputClassification.PerVertexData,
+                        InstanceDataStepRate = 0
+                    },
+
+                    new InputElement()
+                    {
+                        SemanticName = "POSITION",
                         SemanticIndex = 1,
-                        Format = SharpDX.DXGI.Format.R32G32B32A32_Float,
+                        Format = SharpDX.DXGI.Format.R32G32B32_Float,
                         Slot = 1,
-                        AlignedByteOffset = 0,
+                        AlignedByteOffset =  0,
                         Classification = InputClassification.PerInstanceData,
                         InstanceDataStepRate = 1
                     },
-
+                    new InputElement()
+                    {
+                        SemanticName = "POSITION",
+                        SemanticIndex = 2,
+                        Format = SharpDX.DXGI.Format.R32G32B32_Float,
+                        Slot = 2,
+                        AlignedByteOffset =  0,
+                        Classification = InputClassification.PerInstanceData,
+                        InstanceDataStepRate = 1
+                    },
+                    new InputElement()
+                    {
+                        SemanticName = "POSITION",
+                        SemanticIndex = 3,
+                        Format = SharpDX.DXGI.Format.R32G32B32_Float,
+                        Slot = 3,
+                        AlignedByteOffset =  0,
+                        Classification = InputClassification.PerInstanceData,
+                        InstanceDataStepRate = 1
+                    },
+                    new InputElement()
+                    {
+                        SemanticName = "POSITION",
+                        SemanticIndex = 4,
+                        Format = SharpDX.DXGI.Format.R32G32B32_Float,
+                        Slot = 4,
+                        AlignedByteOffset =  0,
+                        Classification = InputClassification.PerInstanceData,
+                        InstanceDataStepRate = 1
+                    },
                 };
 
-                // Create the vertex input the layout. Kin dof like a Vertex Declaration.
                 Layout = new InputLayout(device, ShaderSignature.GetInputSignature(vertexShaderByteCode), inputElements);
 
-                // Release the vertex and pixel shader buffers, since they are no longer needed.
                 vertexShaderByteCode.Dispose();
                 pixelShaderByteCode.Dispose();
 
-                // Setup the description of the dynamic matrix constant Matrix buffer that is in the vertex shader.
                 BufferDescription matrixBufferDescription = new BufferDescription()
                 {
                     Usage = ResourceUsage.Dynamic,
-                    SizeInBytes = Utilities.SizeOf<DMatrixBuffer>(),// * Utilities.SizeOf<DInstanceType>() * instances.Length, //Utilities.SizeOf<DMatrixBuffer>() *
+                    SizeInBytes = Utilities.SizeOf<DMatrixBuffer>(),
                     BindFlags = BindFlags.ConstantBuffer,
                     CpuAccessFlags = CpuAccessFlags.Write,
                     OptionFlags = ResourceOptionFlags.None,
                     StructureByteStride = 0
                 };
 
-
-                /*BufferDescription matrixBufferDescription = new BufferDescription()
-                {
-                    Usage = ResourceUsage.Default,
-                    SizeInBytes = Utilities.SizeOf<DMatrixBuffer>(),
-                    BindFlags = BindFlags.ConstantBuffer,
-                    CpuAccessFlags = CpuAccessFlags.None,
-                    OptionFlags = ResourceOptionFlags.None,
-                    StructureByteStride = 0
-                };*/
-
-
-                // Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
                 ConstantMatrixBuffer = new SharpDX.Direct3D11.Buffer(device, matrixBufferDescription);
 
-
-
-
-                //ConstantMatrixBuffer = SharpDX.Direct3D11.Buffer.Create(device, BindFlags.VertexBuffer, instances);
-
-
-                //int bufferSlotNumberer = 0;
-                //device.ImmediateContext.VertexShader.SetConstantBuffer(bufferSlotNumberer, ConstantMatrixBuffer);
-
-
-                //ConstantMatrixBuffer = SharpDX.Direct3D11.Buffer.Create(device, BindFlags.ConstantBuffer, instances, Utilities.SizeOf<DMatrixBuffer>()* Utilities.SizeOf<DInstanceType>() * instances.Length, ResourceUsage.Dynamic, CpuAccessFlags.Write, ResourceOptionFlags.None, 0);
-
-
-
-                // Create a texture sampler state description.
-                /*SamplerStateDescription samplerDesc = new SamplerStateDescription()
+                SamplerStateDescription samplerDesc = new SamplerStateDescription()
                 {
                     Filter = Filter.MinMagMipLinear,
                     AddressU = TextureAddressMode.Wrap,
@@ -247,148 +198,75 @@ namespace SCCoreSystems
                     MipLodBias = 0,
                     MaximumAnisotropy = 1,
                     ComparisonFunction = Comparison.Always,
-                    BorderColor = new Color4(0, 0, 0, 0),  // Black Border.
+                    BorderColor = new Color4(0, 0, 0, 0),
                     MinimumLod = 0,
                     MaximumLod = float.MaxValue
                 };
 
-                // Create the texture sampler state.
                 SamplerState = new SamplerState(device, samplerDesc);
-                */
-
-                //int bufferSlotNumber = 0;
-                //device.ImmediateContext.VertexShader.SetConstantBuffer(bufferSlotNumber, ConstantMatrixBuffer);
 
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(" SC_cloth_shader ERROR ### " + ex.ToString());
                 return false;
             }
         }
-        inData data;
-        SharpDX.Direct3D11.Buffer bufferWorld;
-
-        [StructLayout(LayoutKind.Sequential, Pack = 16)]
-        public struct inData
-        {
-            //public SharpDX.Matrix worldMatrix;
-            //public SharpDX.Matrix viewMatrix;
-            //public SharpDX.Matrix projectionMatrix;
-            //public Matrix[] worldViewProjection;
-            public Vector3 instancePosition;
-        }
         public void ShutDown()
         {
-            // Shutdown the vertex and pixel shaders as well as the related objects.
-            ShuddownShader();
+            ShutdownShader();
         }
-        private void ShuddownShader()
+        private void ShutdownShader()
         {
             SamplerState?.Dispose();
             SamplerState = null;
-            // Release the matrix constant buffer.
             ConstantMatrixBuffer?.Dispose();
             ConstantMatrixBuffer = null;
-            // Release the layout.
             Layout?.Dispose();
             Layout = null;
-            // Release the pixel shader.
             PixelShader?.Dispose();
             PixelShader = null;
-            // Release the vertex shader.
             VertexShader?.Dispose();
             VertexShader = null;
-
-            GeometryShader?.Dispose();
-            GeometryShader = null;
-
         }
 
-        public bool Render(DeviceContext deviceContext, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, int vertexCount, int instanceCount)
+
+        public bool Render(DeviceContext deviceContext, int VertexCount, int InstanceCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, ShaderResourceView texture, SC_cube.DLightBuffer[] _DLightBuffer_, SC_cube _cuber)
         {
-            if (!SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix))
+            if (!SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, _cuber._WORLDMATRIXINSTANCES))
                 return false;
 
-            RenderShader(deviceContext, indexCount, vertexCount, instanceCount);
+            RenderShader(deviceContext, _DLightBuffer_, _cuber);
 
             return true;
         }
 
+        int _switchOnce = 0;
+        int bufferPositionNumber = 0;
+        DMatrixBuffer matrixBuffer = new DMatrixBuffer();
 
-        int bufferSlotNumber = 0;
-        private bool SetShaderParameters(DeviceContext deviceContext, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix)
+        private bool SetShaderParameters(DeviceContext deviceContext, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, ShaderResourceView texture, Matrix[] worldMatrix_instances)
         {
             try
             {
-                Matrix wvp = worldMatrix * viewMatrix * projectionMatrix;
-                wvp.Transpose();
+                worldMatrix.Transpose();
+                viewMatrix.Transpose();
+                projectionMatrix.Transpose();
 
-                DataStream streamer;
-                deviceContext.MapSubresource(ConstantMatrixBuffer, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out streamer);
-                //streamer.WriteRange(_worldMatrix);
-                DMatrixBuffer matrixBuffer = new DMatrixBuffer()
-                {
-                    worldViewProjection = wvp
-                };
-                streamer.Write(matrixBuffer);
-                //streamer.Write(_worldMatrix);
-                deviceContext.UnmapSubresource(ConstantMatrixBuffer, 0); //to update the data on GPU
-                int bufferSlotNumberer = 0;
-                deviceContext.VertexShader.SetConstantBuffer(bufferSlotNumberer, ConstantMatrixBuffer);
-                streamer.Dispose();
+                deviceContext.MapSubresource(ConstantMatrixBuffer, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out mappedResource);
 
+                matrixBuffer.world = worldMatrix;
+                matrixBuffer.view = viewMatrix;
+                matrixBuffer.projection = projectionMatrix;
 
+                mappedResource.Write(matrixBuffer);
 
+                deviceContext.UnmapSubresource(ConstantMatrixBuffer, 0);
 
+                deviceContext.VertexShader.SetConstantBuffer(bufferPositionNumber, ConstantMatrixBuffer);
+                deviceContext.PixelShader.SetShaderResource(0, texture);
+                mappedResource.Dispose();
 
-                /*Vector3[] total = new Vector3[_worldMatrix.Length];
-                for (int i = 0; i < _worldMatrix.Length; i++)
-                {
-                    total[i].X = _worldMatrix[i].M41;
-                    total[i].Y = _worldMatrix[i].M42;
-                    total[i].Z = _worldMatrix[i].M43;
-
-                    // _worldMatrix[i].M41 += instances[i].position.X;
-                    //_worldMatrix[i].M42 += instances[i].position.Y;
-                    //_worldMatrix[i].M43 += instances[i].position.Z;
-
-                    //total[i] = _worldMatrix[i] * viewMatrix * projectionMatrix;
-                    //total[i].Transpose();
-                }
-
-
-                /*DataStream streamer;
-                deviceContext.MapSubresource(ConstantMatrixBuffer, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out streamer);
-                streamer.WriteRange(total);
-
-                deviceContext.UnmapSubresource(ConstantMatrixBuffer, 0); //to update the data on GPU
-                int bufferSlotNumber = 0;
-                deviceContext.VertexShader.SetConstantBuffer(bufferSlotNumber, ConstantMatrixBuffer);
-                streamer.Dispose();
-                */
-
-
-
-
-
-                /*//inData MatrixBuffer = new inData();
-                //MatrixBuffer.instancePosition = new Vector3(-5, 5, -5);
-                DataStream stream;
-                deviceContext.MapSubresource(InstanceBuffer, MapMode.WriteNoOverwrite, SharpDX.Direct3D11.MapFlags.None, out stream);
-                stream.WriteRange(total);
-                //stream.Write(MatrixBuffer);
-
-                deviceContext.UnmapSubresource(InstanceBuffer, 0); //to update the data on GPU
-                bufferSlotNumber = 1;
-                deviceContext.VertexShader.SetConstantBuffer(bufferSlotNumber, InstanceBuffer);
-                stream.Dispose();*/
-
-
-                //inData MatrixBuffer = new inData();
-                // MatrixBuffer.instancePosition = new Vector3(-5, 5, -5);
-                //deviceContext.UpdateSubresource(ref MatrixBuffer, InstanceBuffer);
                 return true;
             }
             catch
@@ -397,25 +275,51 @@ namespace SCCoreSystems
             }
         }
 
-
-
-
-        private void RenderShader(DeviceContext deviceContext, int indexCount, int vertexCount, int instanceCount)
+        private void RenderShader(DeviceContext deviceContext, SC_cube.DLightBuffer[] _DLightBuffer_, SC_cube _cuber)
         {
+            deviceContext.MapSubresource(_cuber.InstanceBuffer, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out mappedResource);
+            mappedResource.WriteRange(_cuber.instances, 0, _cuber.instances.Length);
+            deviceContext.UnmapSubresource(_cuber.InstanceBuffer, 0);
+            mappedResource.Dispose();
+
+            deviceContext.MapSubresource(_cuber.InstanceRotationBuffer, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out mappedResource);
+            mappedResource.WriteRange(_cuber.instancesDataForward, 0, _cuber.instancesDataForward.Length);
+            deviceContext.UnmapSubresource(_cuber.InstanceRotationBuffer, 0);
+            mappedResource.Dispose();
+
+            deviceContext.MapSubresource(_cuber.InstanceRotationBufferRIGHT, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out mappedResource);
+            mappedResource.WriteRange(_cuber.instancesDataRIGHT, 0, _cuber.instancesDataRIGHT.Length);
+            deviceContext.UnmapSubresource(_cuber.InstanceRotationBufferRIGHT, 0);
+            mappedResource.Dispose();
+
+            deviceContext.MapSubresource(_cuber.InstanceRotationBufferUP, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out mappedResource);
+            mappedResource.WriteRange(_cuber.instancesDataUP, 0, _cuber.instancesDataUP.Length);
+            deviceContext.UnmapSubresource(_cuber.InstanceRotationBufferUP, 0);
+            mappedResource.Dispose();
+
+            if (_switchOnce == 0)
+            {
+                try
+                {
+                    deviceContext.MapSubresource(_constantLightBuffer, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out mappedResource);
+                    mappedResource.WriteRange(_DLightBuffer_, 0, _DLightBuffer_.Length);
+                    deviceContext.UnmapSubresource(_constantLightBuffer, 0);
+                    mappedResource.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Program.MessageBox((IntPtr)0, ex.ToString() + "", "Oculus Error", 0);
+                }
+                //_switchOnce = 1;
+            }
 
             deviceContext.InputAssembler.InputLayout = Layout;
             deviceContext.VertexShader.Set(VertexShader);
             deviceContext.PixelShader.Set(PixelShader);
-            //deviceContext.PixelShader.SetSampler(0, SamplerState);
-            deviceContext.GeometryShader.Set(GeometryShader);
-
-
-            //deviceContext.Draw(36,0);
-
-            //deviceContext.DrawInstanced(36, instanceCount,0,0);
-
-            deviceContext.DrawIndexedInstanced(indexCount, instanceCount, 0, 0, 0);
+            deviceContext.PixelShader.SetConstantBuffer(0, _constantLightBuffer);
+            deviceContext.GeometryShader.Set(null);
+            deviceContext.PixelShader.SetSampler(0, SamplerState);
+            deviceContext.DrawIndexedInstanced(_cuber.IndexCount, _cuber.InstanceCount, 0, 0, 0);
         }
-
     }
 }

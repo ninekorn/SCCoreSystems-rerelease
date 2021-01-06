@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v2.1": {
-      "Ab3d.DXEngine/4.0.7447": {
+      "Ab3d.DXEngine/4.2.7655": {
         "type": "package",
         "compile": {
           "lib/net45/Ab3d.DXEngine.dll": {}
@@ -375,25 +375,48 @@
             "rid": "win"
           }
         }
+      },
+      "Ab3d.DXEngine.OculusWrap/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "Ab3d.OculusWrap": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Ab3d.DXEngine.OculusWrap.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Ab3d.DXEngine.OculusWrap.dll": {}
+        }
+      },
+      "Ab3d.OculusWrap/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/Ab3d.OculusWrap.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Ab3d.OculusWrap.dll": {}
+        }
       }
     }
   },
   "libraries": {
-    "Ab3d.DXEngine/4.0.7447": {
-      "sha512": "ViBSVMvvO8cKW/nb1UHmBtxzER5uJ9hNxrWWNcbbVgTUxCbCNq0L7BXBv0km/tbWVOrKrsMFYZpIr3MceJRx6g==",
+    "Ab3d.DXEngine/4.2.7655": {
+      "sha512": "w13yZhTHxOaIMg8oAgeDrDiT4sC6OHV9WetzqI24POAwfAF9GBBYvIx80izLZLfN+IhfiXyA9esOgiFbNz4xzA==",
       "type": "package",
-      "path": "ab3d.dxengine/4.0.7447",
+      "path": "ab3d.dxengine/4.2.7655",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.txt",
-        "ab3d.dxengine.4.0.7447.nupkg.sha512",
+        "ab3d.dxengine.4.2.7655.nupkg.sha512",
         "ab3d.dxengine.nuspec",
         "icon.png",
         "lib/net40/Ab3d.DXEngine.dll",
         "lib/net40/Ab3d.DXEngine.xml",
         "lib/net45/Ab3d.DXEngine.dll",
         "lib/net45/Ab3d.DXEngine.xml",
+        "lib/net5.0-windows/Ab3d.DXEngine.dll",
+        "lib/net5.0-windows/Ab3d.DXEngine.xml",
         "lib/netcoreapp3.1/Ab3d.DXEngine.dll",
         "lib/netcoreapp3.1/Ab3d.DXEngine.xml",
         "readme.txt"
@@ -1145,11 +1168,23 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "Ab3d.DXEngine.OculusWrap/1.0.0": {
+      "type": "project",
+      "path": "../Ab3d.OculusWrap/Ab3d.OculusWrap/Ab3d.DXEngine.OculusWrap/Ab3d.DXEngine.OculusWrap.csproj",
+      "msbuildProject": "../Ab3d.OculusWrap/Ab3d.OculusWrap/Ab3d.DXEngine.OculusWrap/Ab3d.DXEngine.OculusWrap.csproj"
+    },
+    "Ab3d.OculusWrap/1.0.0": {
+      "type": "project",
+      "path": "../Ab3d.OculusWrap/Ab3d.OculusWrap/Ab3d.OculusWrap/Ab3d.OculusWrap.csproj",
+      "msbuildProject": "../Ab3d.OculusWrap/Ab3d.OculusWrap/Ab3d.OculusWrap/Ab3d.OculusWrap.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.1": [
-      "Ab3d.DXEngine >= 4.0.7447",
+      "Ab3d.DXEngine >= 4.2.7655",
+      "Ab3d.DXEngine.OculusWrap >= 1.0.0",
+      "Ab3d.OculusWrap >= 1.0.0",
       "Microsoft.NETCore.App >= 2.1.0",
       "SharpDX >= 4.2.0",
       "SharpDX.D3DCompiler >= 4.2.0",
@@ -1192,7 +1227,14 @@
       },
       "frameworks": {
         "netcoreapp2.1": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\ninekorn\\Documents\\GitHub\\SCCoreSystems-rerelease\\Ab3d.OculusWrap\\Ab3d.OculusWrap\\Ab3d.DXEngine.OculusWrap\\Ab3d.DXEngine.OculusWrap.csproj": {
+              "projectPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCCoreSystems-rerelease\\Ab3d.OculusWrap\\Ab3d.OculusWrap\\Ab3d.DXEngine.OculusWrap\\Ab3d.DXEngine.OculusWrap.csproj"
+            },
+            "C:\\Users\\ninekorn\\Documents\\GitHub\\SCCoreSystems-rerelease\\Ab3d.OculusWrap\\Ab3d.OculusWrap\\Ab3d.OculusWrap\\Ab3d.OculusWrap.csproj": {
+              "projectPath": "C:\\Users\\ninekorn\\Documents\\GitHub\\SCCoreSystems-rerelease\\Ab3d.OculusWrap\\Ab3d.OculusWrap\\Ab3d.OculusWrap\\Ab3d.OculusWrap.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -1206,7 +1248,7 @@
         "dependencies": {
           "Ab3d.DXEngine": {
             "target": "Package",
-            "version": "[4.0.7447, )"
+            "version": "[4.2.7655, )"
           },
           "Microsoft.NETCore.App": {
             "target": "Package",
@@ -1267,7 +1309,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'Ab3d.DXEngine 4.0.7447' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.1'. This package may not be fully compatible with your project.",
+      "message": "Package 'Ab3d.DXEngine 4.2.7655' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.1'. This package may not be fully compatible with your project.",
       "libraryId": "Ab3d.DXEngine",
       "targetGraphs": [
         ".NETCoreApp,Version=v2.1"

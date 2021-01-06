@@ -58,6 +58,8 @@ namespace SCCoreSystems.SC_Graphics
         public float _total_torso_depth = -1;
         public float _total_torso_width = -1;
 
+        public DInstanceType[] instances { get; set; }
+        public DInstanceData[] instancesDataForward { get; set; }
         public SCCoreSystems.SC_Graphics.SC_cube.DInstanceData[] instancesDataRIGHT { get; set; }
         public SCCoreSystems.SC_Graphics.SC_cube.DInstanceData[] instancesDataUP { get; set; }
 
@@ -157,9 +159,7 @@ namespace SCCoreSystems.SC_Graphics
 
         public SC_cube_instances[] _arrayOfInstances;// { get; set; }
 
-        public DInstanceType[] instances { get; set; }
 
-        public DInstanceData[] instancesDataForward { get; set; }
 
         public int _instX;
         public int _instY;

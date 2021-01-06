@@ -41,19 +41,22 @@ namespace Jitter.Forces
             }
         }
 
-        int sizeX, sizeY;
+        int _sizeX, _sizeY;
         float scale;
 
-        World world;
+        World _world;
 
         PseudoClothBody[] bodies;
         //SC_VR_Cube[] bodies;
 
-        public SC_cube _cube;
+        public SC_jitter_cloth _cube;
 
         public PseudoCloth(World world, SCCoreSystems.sc_console.SC_console_directx D3D, IntPtr windowsHandle, int sizeX, int sizeY, float scale, Matrix matter) //World world, 
         {
-            this.world = world;
+            _sizeX = sizeX;
+            _sizeY = sizeY;
+
+            this._world = world;
             bodies = new PseudoClothBody[sizeX * sizeY];
             //bodies = new SC_VR_Cube[sizeX * sizeY];
 
@@ -79,9 +82,9 @@ namespace Jitter.Forces
 
 
             float _size_screen = 0.05f;
-            _cube = new SC_cube();
+            _cube = new SC_jitter_cloth();
             //bool _hasinit0 = _cube.Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, _size_screen, 1, 1, 0.05f, 0.01f, 0.05f, new Vector4(r, g, b, a), instX, instY, instZ, windowsHandle, _tempMatroxer, 3, offsetPosX, offsetPosY, offsetPosZ); //, "terrainGrassDirt.bmp" //0.00035f
-            var _hasinit0 = _cube.Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, _size_screen, 1, 1, cubesizex * _size_screen, cubesizey * _size_screen, cubesizez * _size_screen, new Vector4(r, g, b, a), sizeX, instY, sizeX, windowsHandle, _tempMatroxer, 4, offsetPosX, offsetPosY, offsetPosZ, world, SCCoreSystems.sc_console.SC_console_directx.BodyTag.sc_jitter_cloth, true, 1, 10, 0, 0, 0); //, "terrainGrassDirt.bmp" //0.00035f
+            var _hasinit0 = _cube.Initialize(D3D, D3D.SurfaceWidth, D3D.SurfaceHeight, _size_screen, 1, 1, cubesizex * _size_screen, cubesizey * _size_screen, cubesizez * _size_screen, new Vector4(r, g, b, a), sizeX, sizeX, instZ, windowsHandle, _tempMatroxer, 1, offsetPosX, offsetPosY, offsetPosZ, world, SCCoreSystems.sc_console.SC_console_directx.BodyTag.sc_jitter_cloth, true, 1, 10, 0, 0, 0); //, "terrainGrassDirt.bmp" //0.00035f
 
 
 
@@ -156,7 +159,7 @@ namespace Jitter.Forces
                     {
                         bodies[x + y * sizeY].IsStatic = true;
                     }
-                    else if (x == 0)
+                    /*else if (x == 0)
                     {
                         bodies[x + y * sizeY].IsStatic = true;
                     }
@@ -174,7 +177,7 @@ namespace Jitter.Forces
                     }
 
 
-                    /*else if (x == (int)sizeX * 0.5f && y == 0)
+                    else if (x == (int)sizeX * 0.5f && y == 0)
                     {
                         bodies[x + y * sizeY].IsStatic = true;
                     }
@@ -206,7 +209,7 @@ namespace Jitter.Forces
 
   
 
-            for (int i = 0; i < sizeX; i++)
+            /*for (int i = 0; i < sizeX; i++)
             {
                 for (int e = 0; e < sizeY; e++)
                 {
@@ -242,12 +245,52 @@ namespace Jitter.Forces
                     if (e == (int)sizeY - 1)
                     {
 
-                    }*/
+                    }
+                }
+            }*/
+
+
+
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int e = 0; e < sizeY; e++)
+                {
+                    if (i + 1 < sizeX)
+                    {
+                        AddDistance(e * sizeY + i, (i + 1) + e * sizeY);
+                        // (i,e) and (i+1,e)
+                    }
+
+                    if (e + 1 < sizeY)
+                    {
+                        AddDistance(e * sizeY + i, ((e + 1) * sizeY) + i);
+                        // (e,i) and (e+1,i)
+
+                    }
+
+                    if ((i + 1 < sizeX) && (e + 1 < sizeY))
+                    {
+                        AddDistance(e * sizeY + i, ((e + 1) * sizeY) + (i + 1));
+                    }
+
+
+                    if ((i > 0) && (e + 1 < sizeY))
+                    {
+                        AddDistance(e * sizeY + i, ((e + 1) * sizeY) + (i - 1));
+                    }
+
+
                 }
             }
 
-            this.sizeX = sizeX;
-            this.sizeY = sizeY;
+
+
+
+
+
+
+            this._sizeX = sizeX;
+            this._sizeY = sizeY;
             this.scale = scale;
         }
 
@@ -258,7 +301,7 @@ namespace Jitter.Forces
 
         public RigidBody GetCorner(int e, int i)
         {
-            return bodies[e * sizeY + i];
+            return bodies[e * _sizeY + i];
         }
 
         private void AddDistance(int p1, int p2)
@@ -268,11 +311,11 @@ namespace Jitter.Forces
             //Console.WriteLine(bodies[p1].Position + " _ " + bodies[p2].Position);
 
             //DistanceConstraint dc = new DistanceConstraint(bodies[p1], bodies[p2], bodies[p1].position, bodies[p2].position);
-            dc.Softness = 0.0001f; //2
+            dc.Softness = 0.001f; //2
             dc.BiasFactor = 0.75f;
             //dc.Distance *= 0.01f;
             dc.Behavior = PointPointDistance.DistanceBehavior.LimitDistance;
-            world.AddConstraint(dc);
+            _world.AddConstraint(dc);
             this.constraints.Add(dc);
 
             /*PointPointDistance dcer = new PointPointDistance(DirectXComponent._arrayOfClothCubes[p1].transform.Component.rigidbody, DirectXComponent._arrayOfClothCubes[p2].transform.Component.rigidbody, DirectXComponent._arrayOfClothCubes[p1].transform.Component.rigidbody.Position, DirectXComponent._arrayOfClothCubes[p2].transform.Component.rigidbody.Position);

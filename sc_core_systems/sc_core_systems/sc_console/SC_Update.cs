@@ -1118,7 +1118,7 @@ namespace SCCoreSystems.sc_console
                 D3D.result = D3D.OVR.SubmitFrame(D3D.sessionPtr, 0L, IntPtr.Zero, ref D3D.layerEyeFov);
                 D3D.WriteErrorDetails(D3D.OVR, D3D.result, "Failed to submit the frame of the current layers.");
                 D3D.DeviceContext.CopyResource(D3D.mirrorTextureD3D, D3D.BackBuffer);
-                D3D.SwapChain.Present(0, PresentFlags.None); //crap visuals returning to only spheroids.
+                //D3D.SwapChain.Present(0, PresentFlags.None); //crap visuals returning to only spheroids.
             }
             catch (Exception ex)
             {

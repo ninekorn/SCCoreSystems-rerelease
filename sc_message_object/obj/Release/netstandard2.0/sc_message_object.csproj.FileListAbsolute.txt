@@ -1,7 +1,6 @@
 C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\sc_message_object\bin\Release\netstandard2.0\sc_message_object.deps.json
 C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\sc_message_object\bin\Release\netstandard2.0\sc_message_object.dll
 C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\sc_message_object\bin\Release\netstandard2.0\sc_message_object.pdb
-C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\sc_message_object\obj\Release\netstandard2.0\sc_message_object.csprojAssemblyReference.cache
 C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\sc_message_object\obj\Release\netstandard2.0\sc_message_object.csproj.CoreCompileInputs.cache
 C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\sc_message_object\obj\Release\netstandard2.0\sc_message_object.AssemblyInfoInputs.cache
 C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\sc_message_object\obj\Release\netstandard2.0\sc_message_object.AssemblyInfo.cs

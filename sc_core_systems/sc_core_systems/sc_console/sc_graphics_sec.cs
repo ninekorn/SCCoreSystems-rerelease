@@ -64,7 +64,14 @@ namespace SCCoreSystems.sc_console
 {
     public class sc_graphics_sec //: SC_Update//SC_Intermediate_Update
     {
-        float totalDiffX = 0;
+
+
+        SC_jitter_cloth.DLightBuffer[] _DLightBuffer_cloth = new SC_jitter_cloth.DLightBuffer[1];
+
+
+
+
+    float totalDiffX = 0;
         float totalDiffY = 0;
         float totalDiffZ = 0;
 
@@ -313,7 +320,7 @@ namespace SCCoreSystems.sc_console
 
         //PHYSICS CUBES
         int _inst_cube_x = 4;
-        int _inst_cube_y = 10;
+        int _inst_cube_y = 4;
         int _inst_cube_z = 4; 
         float _cube_size_x = 0.025f; //0.0115f //1.5f
         float _cube_size_y = 0.025f; //0.0115f //1.5f
@@ -337,9 +344,9 @@ namespace SCCoreSystems.sc_console
         //SPECTRUM
         //SPECTRUM
         //SPECTRUM
-        const int _inst_spectrum_x = 420; // 36 // 210 //75
+        const int _inst_spectrum_x = 42; // 36 // 210 //75
         const int _inst_spectrum_y = 1;
-        const int _inst_spectrum_z = 210; // 36 // 210 //75 //5625
+        const int _inst_spectrum_z = 21; // 36 // 210 //75 //5625
         float _spectrum_size_x = 0.015f; //0.001115f
         float _spectrum_size_y = 0.015f;
         float _spectrum_size_z = 0.015f;
@@ -1021,7 +1028,7 @@ namespace SCCoreSystems.sc_console
 
 
 
-                                            //PHYSICS CUBES
+                                            //1. PHYSICS CUBES
                                             offsetCubeY = 0;
                                             r = 0.75f;
                                             g = 0.15f;
@@ -1058,7 +1065,7 @@ namespace SCCoreSystems.sc_console
 
 
                                             offsetConeY = 10;
-                                            //PHYSICS CONES
+                                            //2. PHYSICS CONES
                                             r = 0.75f;
                                             g = 0.15f;
                                             b = 0;
@@ -1092,7 +1099,7 @@ namespace SCCoreSystems.sc_console
 
 
                                             offsetCylinderY = 20;
-                                            //PHYSICS CYLINDERS
+                                            //3. PHYSICS CYLINDERS
                                             r = 0.75f;
                                             g = 0.15f;
                                             b = 0;
@@ -1126,7 +1133,7 @@ namespace SCCoreSystems.sc_console
 
 
                                             offsetCapsuleY = 30;
-                                            //PHYSICS CAPSULES
+                                            //4. PHYSICS CAPSULES
                                             r = 0.75f;
                                             g = 0.15f;
                                             b = 0;
@@ -1157,13 +1164,10 @@ namespace SCCoreSystems.sc_console
                                                 _array_of_last_frame_capsule_pos[indexer00][indexer01][i] = poser;
                                                 worldMatrix_instances_capsule[indexer00][indexer01][i] = _world_capsule_list[indexer00][indexer01]._arrayOfInstances[i].current_pos;
                                             }
-
-
-
                                             offsetSphereY = 40;
 
 
-                                            //PHYSICS SPHERES
+                                            //5. PHYSICS SPHERES
                                             r = 0.75f;
                                             g = 0.15f;
                                             b = 0;
@@ -1198,7 +1202,7 @@ namespace SCCoreSystems.sc_console
 
 
                                             offsetVoxelY = 40;
-                                            //VOXELS
+                                            //6. VOXELS
                                             r = 0.95f; //0.75f
                                             g = 0.95f; //0.75f
                                             b = 0.95f; //0.75f
@@ -3521,6 +3525,21 @@ namespace SCCoreSystems.sc_console
 
 
 
+                _DLightBuffer_cloth[0] = new SC_jitter_cloth.DLightBuffer()
+                {
+                    ambientColor = ambientColor,
+                    diffuseColor = diffuseColour,
+                    lightDirection = dirLight,
+                    padding0 = 0,
+                    lightPosition = lightpos,
+                    padding1 = 100
+                };
+
+
+
+
+
+
                 _basicTexture = new _sc_texture_loader();
                 bool _hasinit1 = _basicTexture.Initialize(SC_console_directx.D3D.device, "../../../terrainGrassDirt.bmp");
                 _sc_texture_loader _pink_texture = new _sc_texture_loader();
@@ -4914,7 +4933,7 @@ namespace SCCoreSystems.sc_console
                                                         }
                                                         else if ((SCCoreSystems.sc_console.SC_console_directx.BodyTag)body.Tag == SCCoreSystems.sc_console.SC_console_directx.BodyTag.pseudoCloth)
                                                         {
-                                                            var _tempMatrix = Matrix.Identity;
+                                                            /*var _tempMatrix = Matrix.Identity;
 
                                                             Matrix translationMatrix = Matrix.Identity;
                                                             Matrix.Translation(body.Position.X, body.Position.Y, body.Position.Z, out translationMatrix);
@@ -4934,21 +4953,30 @@ namespace SCCoreSystems.sc_console
                                                             _tempMatrix = WorldMatrix;
                                                             _tempMatrix.M41 = pos.X;
                                                             _tempMatrix.M42 = pos.Y;
-                                                            _tempMatrix.M43 = pos.Z;
+                                                            _tempMatrix.M43 = pos.Z;*/
 
-                                                            Quaternion temp_quat;
+                                                            /*Quaternion temp_quat;
                                                             Quaternion.RotationMatrix(ref _tempMatrix, out temp_quat);
                                                             JQuaternion quat = new JQuaternion(temp_quat.X, temp_quat.Y, temp_quat.Z, temp_quat.W);
                                                             JMatrix jmat = JMatrix.CreateFromQuaternion(quat);
-                                                            body.Orientation = jmat;
+                                                            body.Orientation = jmat;*/
 
-                                                            sc_jitter_cloth._cube._arrayOfInstances[clothCounter].current_pos = _tempMatrix;
+                                                            /*sc_jitter_cloth._cube._arrayOfInstances[clothCounter].current_pos = _tempMatrix;
                                                             //_arrayOfClothCubes[clothCounter]._arrayOfInstances[clothCounter].current_pos = _tempMatrix;
                                                             worldMatrix_Cloth_instances[clothCounter] = _tempMatrix;
+                                                            clothCounter++;*/
 
-                                                            clothCounter++;
+                                                            Matrix.Translation(body.Position.X, body.Position.Y, body.Position.Z, out translationMatrix);
+                                                            quatterer = JQuaternion.CreateFromMatrix(body.Orientation);
+                                                            tester = new Quaternion(quatterer.X, quatterer.Y, quatterer.Z, quatterer.W);
+                                                            Matrix.RotationQuaternion(ref tester, out rigidbody_matrix);
+                                                            Matrix.Multiply(ref rigidbody_matrix, ref translationMatrix, out translationMatrix);
+
+                                                            worldMatrix_Cloth_instances[clothCounter] = translationMatrix;
+                                                            sc_jitter_cloth._cube._arrayOfInstances[clothCounter].current_pos = translationMatrix;
+
+                                                            clothCounter++;     
                                                         }
-
                                                     }
                                                 }
                                             }
@@ -5569,11 +5597,11 @@ namespace SCCoreSystems.sc_console
                 //SC_Update._shaderManager.RenderObjectGrid(SC_console_directx.D3D.device.ImmediateContext, _dTouchLeftContainer.IndexCount, matrixLeft, viewMatrix, projectionMatrix);
             }
 
-            /*
+            
             sc_jitter_cloth._cube.Render(SC_console_directx.D3D.device.ImmediateContext);
             //_arrayOfClothCubes[i].RenderInstancedObject(SC_console_directx.D3D.device.ImmediateContext, _arrayOfClothCubes[i].IndexCount, _arrayOfClothCubes[i].InstanceCount, _arrayOfClothCubes[i]._POSITION, viewMatrix, _projectionMatrix, null, worldMatrix_Terrain_instances, _DLightBuffer, oculusRiftDir);
-            SC_Update._shaderManager.RenderInstancedObject(SC_console_directx.D3D.device.ImmediateContext, sc_jitter_cloth._cube.IndexCount, sc_jitter_cloth._cube.InstanceCount, sc_jitter_cloth._cube._POSITION, viewMatrix, projectionMatrix, SC_Update._desktopFrame._ShaderResource, _DLightBuffer_cube, sc_jitter_cloth._cube); // oculusRiftDir
-            */
+            SC_Update._shaderManager.RenderInstancedCloth(SC_console_directx.D3D.device.ImmediateContext, sc_jitter_cloth._cube.IndexCount, sc_jitter_cloth._cube.InstanceCount, sc_jitter_cloth._cube._POSITION, viewMatrix, projectionMatrix, SC_Update._desktopFrame._ShaderResource, _DLightBuffer_cloth, sc_jitter_cloth._cube); // oculusRiftDir
+            
 
             //PHYSICS SCREENS
             _world_screen_list[0][0].Render(SC_console_directx.D3D.device.ImmediateContext);
@@ -7935,6 +7963,61 @@ namespace SCCoreSystems.sc_console
 
 
 
+            //CLOTH instance update
+
+            //worldMatrix_Cloth_instances[]
+
+
+
+            /*for (int c = 0; c < worldMatrix_Cloth_instances.Length;c++)
+            {
+
+            }*/
+
+
+            //SC BUFFERS
+            //SC BUFFERS
+            //SC BUFFERS
+            //CLOTH instance update
+            sc_jitter_cloth._WORLDMATRIXINSTANCES = worldMatrix_Cloth_instances;
+            sc_jitter_cloth._POSITION = worldMatrix_base[0];
+
+            var cubercloth = sc_jitter_cloth;
+            var instancerscloth = cubercloth._cube.instances;
+            var sometestercloth = cubercloth._WORLDMATRIXINSTANCES;
+
+            for (int i = 0; i < instancerscloth.Length; i++)
+            {
+                float xxx = sometestercloth[i].M41;
+                float yyy = sometestercloth[i].M42;
+                float zzz = sometestercloth[i].M43;
+
+                cubercloth._cube.instances[i].position.X = xxx;
+                cubercloth._cube.instances[i].position.Y = yyy;
+                cubercloth._cube.instances[i].position.Z = zzz;
+                cubercloth._cube.instances[i].position.W = 1;
+                Quaternion.RotationMatrix(ref sometestercloth[i], out quat_buffers);
+
+                var dirInstance = sc_maths._newgetdirforward(quat_buffers);
+                cubercloth._cube.instancesDataForward[i].rotation.X = dirInstance.X;
+                cubercloth._cube.instancesDataForward[i].rotation.Y = dirInstance.Y;
+                cubercloth._cube.instancesDataForward[i].rotation.Z = dirInstance.Z;
+                cubercloth._cube.instancesDataForward[i].rotation.W = 1;
+
+                dirInstance = -sc_maths._newgetdirleft(quat_buffers);
+                cubercloth._cube.instancesDataRIGHT[i].rotation.X = dirInstance.X;
+                cubercloth._cube.instancesDataRIGHT[i].rotation.Y = dirInstance.Y;
+                cubercloth._cube.instancesDataRIGHT[i].rotation.Z = dirInstance.Z;
+                cubercloth._cube.instancesDataRIGHT[i].rotation.W = 1;
+
+                dirInstance = dirInstance = sc_maths._newgetdirup(quat_buffers);
+                cubercloth._cube.instancesDataUP[i].rotation.X = dirInstance.X;
+                cubercloth._cube.instancesDataUP[i].rotation.Y = dirInstance.Y;
+                cubercloth._cube.instancesDataUP[i].rotation.Z = dirInstance.Z;
+                cubercloth._cube.instancesDataUP[i].rotation.W = 1;
+            }
+            //END OF
+
 
 
 
@@ -7951,7 +8034,7 @@ namespace SCCoreSystems.sc_console
             _terrain[0][0]._WORLDMATRIXINSTANCES = worldMatrix_instances_terrain[0][0];
             _terrain[0][0]._POSITION = worldMatrix_base[0];
 
-            var cuber = _terrain[0][0];
+             var cuber = _terrain[0][0];
             var instancers = cuber.instances;
             var sometester = cuber._WORLDMATRIXINSTANCES;
 

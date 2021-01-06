@@ -6,18 +6,42 @@ using Jitter;
 using Jitter.Dynamics;
 using Jitter.Collision.Shapes;
 using System.Runtime.InteropServices;
-using System.Collections.Generic;
-using System.Collections;
-using Jitter;
-using Jitter.Dynamics;
-using Jitter.Collision;
+
 using Jitter.LinearMath;
-using Jitter.Dynamics.Constraints;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace SCCoreSystems.SC_Graphics
 {
     public class SC_jitter_cloth : ITransform, IComponent
     {
+        /// <summary>
+        /// Helper method creates a triangle fan to close the ends of the cylinder.
+        /// </summary>
+        void CreateCap(int tessellation, float height, float radius, Vector3 normal)
+        {
+
+        }
+        /// <summary>
+        /// Helper method computes a point on a circle.
+        /// </summary>
+        Vector3 GetCircleVector(int i, int tessellation)
+        {
+            float angle = i * TWOPI / tessellation;
+
+            float dx = (float)Math.Cos(angle);
+            float dz = (float)Math.Sin(angle);
+
+            return new Vector3(dx, 0, dz);
+        }
+
+
+
+        //public Jitter.Forces.Buoyancy _buo { get; set; }
+        float PIovertwo = 1.57079632679f;
+        float TWOPI = 6.28318530718f;
+
+
         public ITransform transform { get; private set; }
         IComponent ITransform.Component
         {
@@ -29,11 +53,13 @@ namespace SCCoreSystems.SC_Graphics
         SoftBody IComponent.softbody { get; set; }
 
         public Matrix[] _WORLDMATRIXINSTANCES { get; set; }
-        public int[] triangles;
+        int[] triangles;
         public float _total_torso_height = -1;
         public float _total_torso_depth = -1;
         public float _total_torso_width = -1;
 
+        public DInstanceType[] instances { get; set; }
+        public DInstanceData[] instancesDataForward { get; set; }
         public SCCoreSystems.SC_Graphics.SC_jitter_cloth.DInstanceData[] instancesDataRIGHT { get; set; }
         public SCCoreSystems.SC_Graphics.SC_jitter_cloth.DInstanceData[] instancesDataUP { get; set; }
 
@@ -133,9 +159,7 @@ namespace SCCoreSystems.SC_Graphics
 
         public SC_jitter_cloth_instances[] _arrayOfInstances;// { get; set; }
 
-        public DInstanceType[] instances { get; set; }
 
-        public DInstanceData[] instancesDataForward { get; set; }
 
         public int _instX;
         public int _instY;
@@ -202,6 +226,13 @@ namespace SCCoreSystems.SC_Graphics
         }
 
 
+        /*bool _set_fluid_point(ref JVector test)
+        {
+            //test = new JVector(5, 5, 5);
+            test = new JVector(0, 0, 0);
+            return _buo.FluidBox.Contains(ref test) != JBBox.ContainmentType.Disjoint;
+        }*/
+
 
         SharpDX.Direct3D11.Buffer ConstantLightBuffer;
 
@@ -217,6 +248,12 @@ namespace SCCoreSystems.SC_Graphics
         {
             try
             {
+                int tessellation = 3;
+                float diameter = 5;
+                float length = 5;
+                float radius = 1;
+                float height = 5;
+
                 int sizeWidther = (int)(m_TerrainWidth * 0.5f);
                 int sizeHeighter = (int)(m_TerrainHeight * 0.5f);
 
@@ -225,26 +262,28 @@ namespace SCCoreSystems.SC_Graphics
 
                 var someOffsetPos = new Vector3(offsetPosX, offsetPosY, offsetPosZ);
 
-                Vertices = new[]
-                                {                                   
+                if (type_of_cube == 0 || type_of_cube == 2 || type_of_cube == 3 || type_of_cube == 4 || type_of_cube == 5)
+                {
+                    Vertices = new[]
+                    {                                   
                     //TOP
                     new DVertex()
                     {
-                        position = new Vector3(1*_sizeX, 1*_sizeY, 1*_sizeZ) ,
-                        texture = new Vector2(1, 1),
+                        position = new Vector3((1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY, (1+vertoffsetz)*_sizeZ) ,
+                        texture = new Vector2(0, 0),
                         color = _color,
                         normal = new Vector3(0, 1, 1),
                     },
                      new DVertex()
                      {
-                         position = new Vector3(1*_sizeX, 1*_sizeY, -1*_sizeZ) ,
-                         texture = new Vector2(1, 0),
+                         position = new Vector3((1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY, (-1+vertoffsetz)*_sizeZ) ,
+                         texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(0, 1, 1),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(-1*_sizeX, 1*_sizeY, -1*_sizeZ) ,
+                         position = new Vector3((-1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY,  (-1+vertoffsetz)*_sizeZ) ,
                          texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(0, 1, 1),
@@ -252,22 +291,22 @@ namespace SCCoreSystems.SC_Graphics
                      },
                      new DVertex()
                      {
-                         position = new Vector3(-1*_sizeX, 1*_sizeY, -1*_sizeZ) ,
+                         position = new Vector3((-1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY,  (-1+vertoffsetz)*_sizeZ) ,
                          texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(0, 1, 1),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(-1*_sizeX, 1*_sizeY, 1*_sizeZ) ,
-                         texture = new Vector2(0, 1),
+                         position = new Vector3( (-1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY, (1+vertoffsetz)*_sizeZ) ,
+                         texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(0, 1, 1),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(1*_sizeX, 1*_sizeY, 1*_sizeZ),
-                         texture = new Vector2(1, 1),
+                         position = new Vector3((1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY, (1+vertoffsetz)*_sizeZ),
+                         texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(0, 1, 1),
                      },
@@ -277,49 +316,49 @@ namespace SCCoreSystems.SC_Graphics
 
 
 
-
+                     
                      //BOTTOM
                      new DVertex()
                      {
-                         position = new Vector3(-1*_sizeX, -1*_sizeY, -1*_sizeZ) ,
+                         position = new Vector3((-1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY, (-1+vertoffsetz)*_sizeZ) ,
                          texture = new Vector2(0, 0),
                          normal = new Vector3(1, 0, 1),
                          color = _color,
                      },
                      new DVertex()
                      {
-                         position = new Vector3(1*_sizeX, -1*_sizeY, -1*_sizeZ) ,
-                         texture = new Vector2(1, 0),
+                         position = new Vector3((1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY, (-1+vertoffsetz)*_sizeZ) ,
+                         texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(1, 0, 1),
 
                      },
                      new DVertex()
                      {
-                         position = new Vector3(1*_sizeX, -1*_sizeY, 1*_sizeZ) ,
-                         texture = new Vector2(1, 1),
+                         position = new Vector3((1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY, (1+vertoffsetz)*_sizeZ) ,
+                         texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(1, 0, 1),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(1*_sizeX, -1*_sizeY, 1*_sizeZ) ,
-                         texture = new Vector2(1, 1),
-                         color = _color,
-                         normal = new Vector3(1, 0, 1),
-
-                     },
-                     new DVertex()
-                     {
-                         position = new Vector3(-1*_sizeX, -1*_sizeY, 1*_sizeZ) ,
-                         texture = new Vector2(0, 1),
+                         position = new Vector3((1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY, (1+vertoffsetz)*_sizeZ) ,
+                         texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(1, 0, 1),
 
                      },
                      new DVertex()
                      {
-                         position = new Vector3(-1*_sizeX, -1*_sizeY, -1*_sizeZ) ,
+                         position = new Vector3((-1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY, (1+vertoffsetz)*_sizeZ) ,
+                         texture = new Vector2(0, 0),
+                         color = _color,
+                         normal = new Vector3(1, 0, 1),
+
+                     },
+                     new DVertex()
+                     {
+                         position = new Vector3((-1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY, (-1+vertoffsetz)*_sizeZ) ,
                          texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(1, 0, 1),
@@ -329,42 +368,42 @@ namespace SCCoreSystems.SC_Graphics
                     //FACE NEAR
                     new DVertex() //12
                     {
-                        position = new Vector3(1*_sizeX, 1*_sizeY, -1*_sizeZ) ,
+                        position = new Vector3((1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY, (-1+vertoffsetz)*_sizeZ) ,
                         texture = new Vector2(1, 1),
                         color = _color,
                         normal = new Vector3(1, 0, 0),
                     },
                      new DVertex() //13
                      {
-                         position = new Vector3(1*_sizeX, -1*_sizeY, -1*_sizeZ) ,
+                         position = new Vector3((1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY, (-1+vertoffsetz)*_sizeZ) ,
                          texture = new Vector2(1, 0),
                          color = _color,
                          normal = new Vector3(1, 0, 0),
                      },
                      new DVertex() //14
                      {
-                         position = new Vector3(-1*_sizeX, -1*_sizeY, -1*_sizeZ) ,
+                         position = new Vector3((-1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY, (-1+vertoffsetz)*_sizeZ) ,
                          texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(1, 0, 0),
                      },
                      new DVertex() //15
                      {
-                         position = new Vector3(-1*_sizeX, 1*_sizeY, -1*_sizeZ) ,
+                         position = new Vector3((-1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY, (-1+vertoffsetz)*_sizeZ) ,
                          texture = new Vector2(0, 1),
                          color = _color,
                          normal = new Vector3(1, 0, 0),
                      },
                      new DVertex() //16
                      {
-                         position = new Vector3(1*_sizeX, 1*_sizeY, -1*_sizeZ) ,
+                         position = new Vector3((1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY, (-1+vertoffsetz)*_sizeZ) ,
                          texture = new Vector2(1, 1),
                          color = _color,
                          normal = new Vector3(1, 0, 0),
                      },
                      new DVertex() //17
                      {
-                         position = new Vector3(-1*_sizeX, -1*_sizeY, -1*_sizeZ) ,
+                         position = new Vector3((-1+vertoffsetx)*_sizeX,(-1+vertoffsety)*_sizeY, (-1+vertoffsetz)*_sizeZ) ,
                          texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(1, 0, 0),
@@ -375,42 +414,42 @@ namespace SCCoreSystems.SC_Graphics
                      //FACE FAR
                      new DVertex()
                      {
-                         position = new Vector3(-1*_sizeX, -1*_sizeY, 1*_sizeZ) ,
+                         position = new Vector3((-1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY, (1+vertoffsetz)*_sizeZ) ,
                          texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(0, 1, 0),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(1*_sizeX, -1*_sizeY, 1*_sizeZ) ,
-                         texture = new Vector2(1, 0),
+                         position = new Vector3((1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY, (1+vertoffsetz)*_sizeZ) ,
+                         texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(0, 1, 0),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(1*_sizeX, 1*_sizeY, 1*_sizeZ) ,
-                         texture = new Vector2(1, 1),
+                         position = new Vector3((1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY,(1+vertoffsetz)*_sizeZ) ,
+                         texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(0, 1, 0),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(1*_sizeX, 1*_sizeY, 1*_sizeZ),
-                         texture = new Vector2(1, 1),
+                         position = new Vector3((1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY, (1+vertoffsetz)*_sizeZ),
+                         texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(0, 1, 0),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(-1*_sizeX, 1*_sizeY, 1*_sizeZ) ,
-                         texture = new Vector2(0, 1),
+                         position = new Vector3((-1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY, (1+vertoffsetz)*_sizeZ) ,
+                         texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(0, 1, 0),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(-1*_sizeX, -1*_sizeY, 1*_sizeZ),
+                         position = new Vector3((-1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY, (1+vertoffsetz)*_sizeZ),
                          texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(0, 1, 0),
@@ -424,43 +463,43 @@ namespace SCCoreSystems.SC_Graphics
                      //FACE LEFT
                      new DVertex()
                      {
-                         position = new Vector3(-1*_sizeX, 1*_sizeY, 1*_sizeZ),
-                         texture = new Vector2(1, 1),
-                         color = _color,
-                         normal = new Vector3(0, 0, 1),
-                     },
-                     new DVertex()
-                     {
-                         position = new Vector3(-1*_sizeX, 1*_sizeY, -1*_sizeZ) ,
-                         texture = new Vector2(1, 0),
-                         color = _color,
-                         normal = new Vector3(0, 0, 1),
-                     },
-                     new DVertex()
-                     {
-                         position = new Vector3(-1*_sizeX, -1*_sizeY, -1*_sizeZ),
+                         position = new Vector3((-1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY, (1+vertoffsetz)*_sizeZ),
                          texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(0, 0, 1),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(-1*_sizeX, -1*_sizeY, -1*_sizeZ) ,
+                         position = new Vector3((-1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY, (-1+vertoffsetz)*_sizeZ) ,
                          texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(0, 0, 1),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(-1*_sizeX, -1*_sizeY, 1*_sizeZ) ,
-                         texture = new Vector2(0, 1),
+                         position = new Vector3((-1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY, (-1+vertoffsetz)*_sizeZ),
+                         texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(0, 0, 1),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(-1*_sizeX, 1*_sizeY, 1*_sizeZ) ,
-                         texture = new Vector2(1, 1),
+                         position = new Vector3((-1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY, (-1+vertoffsetz)*_sizeZ) ,
+                         texture = new Vector2(0, 0),
+                         color = _color,
+                         normal = new Vector3(0, 0, 1),
+                     },
+                     new DVertex()
+                     {
+                         position = new Vector3((-1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY,(1+vertoffsetz)*_sizeZ) ,
+                         texture = new Vector2(0, 0),
+                         color = _color,
+                         normal = new Vector3(0, 0, 1),
+                     },
+                     new DVertex()
+                     {
+                         position = new Vector3((-1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY, (1+vertoffsetz)*_sizeZ) ,
+                         texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(0, 0, 1),
                      },
@@ -471,83 +510,557 @@ namespace SCCoreSystems.SC_Graphics
                      //FACE RIGHT
                      new DVertex()
                      {
-                         position = new Vector3(1*_sizeX, -1*_sizeY, -1*_sizeZ) ,
+                         position = new Vector3((1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY, (-1+vertoffsetz)*_sizeZ) ,
                          texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(1, 1, 0),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(1*_sizeX, 1*_sizeY, -1*_sizeZ) ,
-                         texture = new Vector2(1, 0),
+                         position = new Vector3((1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY, (-1+vertoffsetz)*_sizeZ) ,
+                         texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(1, 1, 0),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(1*_sizeX, 1*_sizeY, 1*_sizeZ) ,
-                         texture = new Vector2(1, 1),
+                         position = new Vector3((1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY, (1+vertoffsetz)*_sizeZ) ,
+                         texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(1, 1, 0),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(1*_sizeX, 1*_sizeY, 1*_sizeZ) ,
-                         texture = new Vector2(1, 1),
+                         position = new Vector3((1+vertoffsetx)*_sizeX, (1+vertoffsety)*_sizeY, (1+vertoffsetz)*_sizeZ) ,
+                         texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(1, 1, 0),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(1*_sizeX, -1*_sizeY, 1*_sizeZ) ,
-                         texture = new Vector2(0, 1),
+                         position = new Vector3((1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY, (1+vertoffsetz)*_sizeZ) ,
+                         texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(1, 1, 0),
                      },
                      new DVertex()
                      {
-                         position = new Vector3(1*_sizeX, -1*_sizeY, -1*_sizeZ) ,
+                         position = new Vector3((1+vertoffsetx)*_sizeX, (-1+vertoffsety)*_sizeY, (-1+vertoffsetz)*_sizeZ) ,
                          texture = new Vector2(0, 0),
                          color = _color,
                          normal = new Vector3(1, 1, 0),
                      },
                  };
 
-                _total_torso_width = ((1 * _sizeX) + (offsetPosX * _sizeX) * 2);
-                _total_torso_height = ((1 * _sizeY) + (offsetPosY * _sizeY) * 2);
-                _total_torso_depth = ((1 * _sizeZ) + (offsetPosZ * _sizeZ) * 2);
+                    _total_torso_width = ((1 * _sizeX) + (offsetPosX * _sizeX) * 2);
+                    _total_torso_height = ((1 * _sizeY) + (offsetPosY * _sizeY) * 2);
+                    _total_torso_depth = ((1 * _sizeZ) + (offsetPosZ * _sizeZ) * 2);
 
 
-                triangles = new int[]
+                    triangles = new int[]
+                    {
+                    5,4,3,2,1,0,
+                    11,10,9,8,7,6,
+                    17,16,15,14,13,12,
+                    23,22,21,20,19,18,
+                    29,28,27,26,25,24,
+                    35,34,33,32,31,30,
+                     };
+                }
+                else if (type_of_cube == 1) // JITTER SPHERE
                 {
-                        5,4,3,2,1,0,
-                        11,10,9,8,7,6,
-                        17,16,15,14,13,12,
-                        23,22,21,20,19,18,
-                        29,28,27,26,25,24,
-                        35,34,33,32,31,30,
-                 };
+                    //tessellation = 10;
 
-                List<TriangleVertexIndices> indicess = new List<TriangleVertexIndices>();
-                List<JVector> verticess = new List<JVector>();
+                    int verticalSegments = tessellation;
+                    int horizontalSegments = tessellation * 2;
+                    diameter = tileSize * 0.5f;
 
-                for (int i = 0; i < Vertices.Length; i++)
+                    radius = diameter / 2;
+                    List<DVertex> list_verts = new List<DVertex>();
+                    List<Vector3> list_normals = new List<Vector3>();
+                    List<int> list_triangles = new List<int>();
+
+                    // Start with a single vertex at the bottom of the sphere.
+
+                    DVertex vertex = new DVertex()
+                    {
+                        position = Vector3.Down * radius,
+                        texture = new Vector2(0, 1),
+                        color = _color,
+                        normal = Vector3.Down,
+                    };
+                    list_verts.Add(vertex);
+
+
+
+                    // Create rings of vertices at progressively higher latitudes.
+                    for (int i = 0; i < verticalSegments - 1; i++)
+                    {
+                        float latitude = (float)(((i + 1) * Math.PI / verticalSegments) - PIovertwo);
+
+                        float dy = (float)Math.Sin(latitude);
+                        float dxz = (float)Math.Cos(latitude);
+
+                        // Create a single ring of vertices at this latitude.
+                        for (int j = 0; j < horizontalSegments; j++)
+                        {
+                            float longitude = j * TWOPI / horizontalSegments;
+
+                            float dx = (float)Math.Cos(longitude) * dxz;
+                            float dz = (float)Math.Sin(longitude) * dxz;
+
+                            Vector3 normal = new Vector3(dx, dy, dz);
+
+                            vertex = new DVertex()
+                            {
+                                position = normal * radius,
+                                texture = new Vector2(0, 1),
+                                color = _color,
+                                normal = normal,
+                            };
+                            list_verts.Add(vertex);
+                        }
+                    }
+
+                    // Finish with a single vertex at the top of the sphere.
+                    vertex = new DVertex()
+                    {
+                        position = Vector3.Up * radius,
+                        texture = new Vector2(0, 1),
+                        color = _color,
+                        normal = Vector3.Up,
+                    };
+                    list_verts.Add(vertex);
+
+
+                    // Create a fan connecting the bottom vertex to the bottom latitude ring.
+                    for (int i = 0; i < horizontalSegments; i++)
+                    {
+                        list_triangles.Add(0);
+                        list_triangles.Add(1 + (i + 1) % horizontalSegments);
+                        list_triangles.Add(1 + i);
+                    }
+
+                    // Fill the sphere body with triangles joining each pair of latitude rings.
+                    for (int i = 0; i < verticalSegments - 2; i++)
+                    {
+                        for (int j = 0; j < horizontalSegments; j++)
+                        {
+                            int nextI = i + 1;
+                            int nextJ = (j + 1) % horizontalSegments;
+
+                            list_triangles.Add(1 + i * horizontalSegments + j);
+                            list_triangles.Add(1 + i * horizontalSegments + nextJ);
+                            list_triangles.Add(1 + nextI * horizontalSegments + j);
+
+                            list_triangles.Add(1 + i * horizontalSegments + nextJ);
+                            list_triangles.Add(1 + nextI * horizontalSegments + nextJ);
+                            list_triangles.Add(1 + nextI * horizontalSegments + j);
+                        }
+                    }
+
+                    // Create a fan connecting the top vertex to the top latitude ring.
+                    for (int i = 0; i < horizontalSegments; i++)
+                    {
+                        list_triangles.Add(list_verts.Count - 1);
+                        list_triangles.Add(list_verts.Count - 2 - (i + 1) % horizontalSegments);
+                        list_triangles.Add(list_verts.Count - 2 - i);
+                    }
+
+
+
+                    Vertices = list_verts.ToArray();
+                    triangles = list_triangles.ToArray();
+
+                }
+                else if (type_of_cube == 6) // CAPSULE
                 {
-                    verticess.Add(new JVector(Vertices[i].position.X, Vertices[i].position.Y, Vertices[i].position.Z));
+                    int vertIndex = 0;
+
+                    //tessellation = 10;
+                    diameter = tileSize * 0.5f;
+                    length = _sizeX * 40 * 0.5f;
+
+                    int verticalSegments = tessellation;
+                    int horizontalSegments = tessellation * 2;
+
+                    radius = diameter / 2;
+
+                    List<DVertex> list_verts = new List<DVertex>();
+                    List<Vector3> list_normals = new List<Vector3>();
+                    List<int> list_triangles = new List<int>();
+
+                    DVertex vertex = new DVertex()
+                    {
+                        position = (Vector3.Down * tileSize) * radius + (Vector3.Down * tileSize) * 0.5f * length,
+                        texture = new Vector2(0, 1),
+                        color = _color,
+                        normal = Vector3.Down,
+                    };
+                    list_verts.Add(vertex);
+
+                    // Create rings of vertices at progressively higher latitudes.
+                    for (int i = 0; i < verticalSegments - 1; i++)
+                    {
+                        float latitude = (float)(((i + 1) * Math.PI / verticalSegments) - PIovertwo);
+                        float dy = (float)Math.Sin(latitude);
+                        float dxz = (float)Math.Cos(latitude);
+
+                        bool bla = false;
+
+                        if (i > (verticalSegments - 2) / 2)
+                        {
+                            bla = true;
+                        }
+
+                        // Create a single ring of vertices at this latitude.
+                        for (int j = 0; j < horizontalSegments; j++)
+                        {
+                            float longitude = j * TWOPI / horizontalSegments;
+
+                            float dx = (float)Math.Cos(longitude) * dxz;
+                            float dz = (float)Math.Sin(longitude) * dxz;
+
+                            Vector3 normal = new Vector3(dx, dy, dz);
+                            Vector3 position = normal * radius;
+
+                            if (bla) position += (Vector3.Up * tileSize) * 0.5f * length;
+                            else position += (Vector3.Down * tileSize) * 0.5f * length;
+
+                            //AddVertex(position, normal);
+                            vertex = new DVertex()
+                            {
+                                position = position,
+                                texture = new Vector2(0, 1),
+                                color = _color,
+                                normal = normal,
+                            };
+                            list_verts.Add(vertex);
+                        }
+                    }
+
+                    // Finish with a single vertex at the top of the sphere.
+                    //AddVertex(, );
+                    vertex = new DVertex()
+                    {
+                        position = (Vector3.Up * tileSize) * radius + (Vector3.Up * tileSize) * 0.5f * length,
+                        texture = new Vector2(0, 1),
+                        color = _color,
+                        normal = Vector3.Up,
+                    };
+                    list_verts.Add(vertex);
+
+                    // Create a fan connecting the bottom vertex to the bottom latitude ring.
+                    for (int i = 0; i < horizontalSegments; i++)
+                    {
+                        list_triangles.Add(0);
+                        list_triangles.Add(1 + (i + 1) % horizontalSegments);
+                        list_triangles.Add(1 + i);
+                        //AddIndex(0);
+                        //AddIndex(1 + (i + 1) % horizontalSegments);
+                        //AddIndex(1 + i);
+                    }
+
+                    // Fill the sphere body with triangles joining each pair of latitude rings.
+                    for (int i = 0; i < verticalSegments - 2; i++)
+                    {
+                        for (int j = 0; j < horizontalSegments; j++)
+                        {
+                            int nextI = i + 1;
+                            int nextJ = (j + 1) % horizontalSegments;
+
+                            list_triangles.Add(1 + i * horizontalSegments + j);
+                            list_triangles.Add(1 + i * horizontalSegments + nextJ);
+                            list_triangles.Add(1 + nextI * horizontalSegments + j);
+
+                            list_triangles.Add(1 + i * horizontalSegments + nextJ);
+                            list_triangles.Add(1 + nextI * horizontalSegments + nextJ);
+                            list_triangles.Add(1 + nextI * horizontalSegments + j);
+                        }
+                    }
+
+                    // Create a fan connecting the top vertex to the top latitude ring.
+                    for (int i = 0; i < horizontalSegments; i++)
+                    {
+                        list_triangles.Add((list_verts.Count) - 1);
+                        list_triangles.Add((list_verts.Count) - 2 - (i + 1) % horizontalSegments);
+                        list_triangles.Add((list_verts.Count) - 2 - i);
+
+                    }
+
+                    Vertices = list_verts.ToArray();
+                    triangles = list_triangles.ToArray();
+
+                }
+                else if (type_of_cube == 7) // CONE
+                {
+                    List<DVertex> list_verts = new List<DVertex>();
+                    List<Vector3> list_normals = new List<Vector3>();
+                    List<int> list_triangles = new List<int>();
+
+                    //tessellation = 3;
+                    diameter = tileSize * 0.5f;
+                    height = _sizeX * 5 * 0.5f;
+                    radius = diameter * 0.5f;
+
+
+                    // Create a ring of triangles around the outside of the cylinder.
+                    //AddVertex(Vector3.Up * (2.0f / 3.0f) * height, Vector3.Up);
+                    DVertex vertex = new DVertex()
+                    {
+                        position = Vector3.Up * (2.0f / 3.0f) * height,
+                        texture = new Vector2(0, 0),
+                        color = _color,
+                        normal = Vector3.Up,
+                    };
+                    list_verts.Add(vertex);
+
+
+
+                    for (int i = 0; i < tessellation; i++)
+                    {
+                        Vector3 normal = GetCircleVector(i, tessellation);
+                        //AddVertex(normal * radius + (1.0f / 3.0f) * height * Vector3.Down, normal);
+                        vertex = new DVertex()
+                        {
+                            position = normal * radius + (1.0f / 3.0f) * height * Vector3.Down,
+                            texture = new Vector2(0, 1),
+                            color = _color,
+                            normal = normal,
+                        };
+                        list_verts.Add(vertex);
+
+                        list_triangles.Add(0);
+                        list_triangles.Add(i);
+                        list_triangles.Add(i + 1);
+                    }
+
+                    list_triangles.Add(0);
+                    list_triangles.Add(tessellation);
+                    list_triangles.Add(1);
+
+
+
+
+                    height = (1.0f / 3.0f) * height;
+
+                    var norm = Vector3.Down;
+                    //CreateCap(tessellation, (1.0f / 3.0f) * height, radius, Vector3.Down);
+                    // Create cap indices.
+                    for (int i = 0; i < tessellation - 2; i++)
+                    {
+                        if (norm.Y > 0)
+                        {
+                            list_triangles.Add(list_verts.Count);
+                            list_triangles.Add((list_verts.Count) + (i + 1) % tessellation);
+                            list_triangles.Add((list_verts.Count) + (i + 2) % tessellation);
+
+                        }
+                        else
+                        {
+                            list_triangles.Add(list_verts.Count);
+                            list_triangles.Add((list_verts.Count) + (i + 2) % tessellation);
+                            list_triangles.Add((list_verts.Count) + (i + 1) % tessellation);
+                        }
+                    }
+
+                    // Create cap vertices.
+                    for (int i = 0; i < tessellation; i++)
+                    {
+                        Vector3 position = GetCircleVector(i, tessellation) * radius + norm * height;
+
+                        //AddVertex(position, norm);
+
+                        vertex = new DVertex()
+                        {
+                            position = position,
+                            texture = new Vector2(0, 0),
+                            color = _color,
+                            normal = norm,
+                        };
+                        list_verts.Add(vertex);
+                    }
+
+                    Vertices = list_verts.ToArray();
+                    triangles = list_triangles.ToArray();
+                }
+                else if (type_of_cube == 8) //CYLINDER
+                {
+                    //tessellation = 10;
+                    diameter = tileSize * 0.5f;
+                    height = _sizeX * 5 * 0.5f;
+                    radius = diameter * 0.5f;
+                    //if (tessellation < 3) //throw error
+
+                    List<DVertex> list_verts = new List<DVertex>();
+                    List<Vector3> list_normals = new List<Vector3>();
+                    List<int> list_triangles = new List<int>();
+
+
+                    height /= 2;
+                    DVertex vertex;
+                    // Create a ring of triangles around the outside of the cylinder.
+                    for (int i = 0; i < tessellation; i++)
+                    {
+                        Vector3 normal = GetCircleVector(i, tessellation);
+
+                        vertex = new DVertex()
+                        {
+                            position = normal * radius + Vector3.Up * height,
+                            texture = new Vector2(0, 1),
+                            color = _color,
+                            normal = normal,
+                        };
+                        list_verts.Add(vertex);
+
+                        vertex = new DVertex()
+                        {
+                            position = normal * radius + Vector3.Down * height,
+                            texture = new Vector2(0, 1),
+                            color = _color,
+                            normal = normal,
+                        };
+                        list_verts.Add(vertex);
+
+                        list_triangles.Add(i * 2);
+                        list_triangles.Add(i * 2 + 1);
+                        list_triangles.Add((i * 2 + 2) % (tessellation * 2));
+
+                        list_triangles.Add(i * 2 + 1);
+                        list_triangles.Add((i * 2 + 3) % (tessellation * 2));
+                        list_triangles.Add((i * 2 + 2) % (tessellation * 2));
+                    }
+
+
+
+                    var norm = Vector3.Down;
+                    for (int i = 0; i < tessellation - 2; i++)
+                    {
+                        if (norm.Y > 0)
+                        {
+                            list_triangles.Add(list_verts.Count);
+                            list_triangles.Add((list_verts.Count) + (i + 1) % tessellation);
+                            list_triangles.Add((list_verts.Count) + (i + 2) % tessellation);
+
+                        }
+                        else
+                        {
+                            list_triangles.Add(list_verts.Count);
+                            list_triangles.Add((list_verts.Count) + (i + 2) % tessellation);
+                            list_triangles.Add((list_verts.Count) + (i + 1) % tessellation);
+                        }
+                    }
+
+                    // Create cap vertices.
+                    for (int i = 0; i < tessellation; i++)
+                    {
+                        Vector3 position = GetCircleVector(i, tessellation) * radius + norm * height;
+
+                        //AddVertex(position, norm);
+
+                        vertex = new DVertex()
+                        {
+                            position = position,
+                            texture = new Vector2(0, 0),
+                            color = _color,
+                            normal = norm,
+                        };
+                        list_verts.Add(vertex);
+                    }
+
+                    norm = Vector3.Up;
+                    for (int i = 0; i < tessellation - 2; i++)
+                    {
+                        if (norm.Y > 0)
+                        {
+                            list_triangles.Add(list_verts.Count);
+                            list_triangles.Add((list_verts.Count) + (i + 1) % tessellation);
+                            list_triangles.Add((list_verts.Count) + (i + 2) % tessellation);
+
+                        }
+                        else
+                        {
+                            list_triangles.Add(list_verts.Count);
+                            list_triangles.Add((list_verts.Count) + (i + 2) % tessellation);
+                            list_triangles.Add((list_verts.Count) + (i + 1) % tessellation);
+                        }
+                    }
+
+                    // Create cap vertices.
+                    for (int i = 0; i < tessellation; i++)
+                    {
+                        Vector3 position = GetCircleVector(i, tessellation) * radius + norm * height;
+
+                        //AddVertex(position, norm);
+
+                        vertex = new DVertex()
+                        {
+                            position = position,
+                            texture = new Vector2(0, 0),
+                            color = _color,
+                            normal = norm,
+                        };
+                        list_verts.Add(vertex);
+                    }
+
+                    Vertices = list_verts.ToArray();
+                    triangles = list_triangles.ToArray();
                 }
 
-                if (triangles == null)
-                {
-                    Program.MessageBox((IntPtr)0, "null _jitter_cloth.indices ", "sc core systems message", 0);
-                }
 
-                for (int i = 0; i < triangles.Length / 3; i++)
-                {
-                    //var one = indices[(i * 3) + 0];
-                    //var two = indices[(i * 3) + 1];
-                    //var three = indices[(i * 3) + 2];
-                    indicess.Add(new TriangleVertexIndices(triangles[(i * 3) + 0], triangles[(i * 3) + 1], triangles[(i * 3) + 2]));
-                }
+                /*
+                Jitter.Forces.Buoyancy _buo = new Jitter.Forces.Buoyancy(_the_world);
+
+                float _size__neg_x = -5;
+                float _size__pos_x = 5;
+
+                float _size__neg_y = 0;
+                float _size__pos_y = 0.45f;
+
+                float _size__neg_z = -5;
+                float _size__pos_z = 5;
+
+                JVector _min = new JVector(_size__neg_x, _size__neg_y, _size__neg_z);
+                JVector _max = new JVector(_size__pos_x, _size__pos_y, _size__pos_z);
+
+                JBBox _box = new JBBox(_min, _max);
+                //_box.Min = new JVector(_size__neg_x, _size__neg_y, _size__neg_z);
+
+
+
+                _box.AddPoint(new JVector(_size__neg_x, _size__neg_y, _size__neg_z));
+                _box.AddPoint(new JVector(_size__pos_x, _size__neg_y, _size__neg_z));
+                _box.AddPoint(new JVector(_size__neg_x, _size__neg_y, _size__pos_z));
+                _box.AddPoint(new JVector(_size__pos_x, _size__neg_y, _size__pos_z));
+
+                _box.AddPoint(new JVector(_size__neg_x, _size__pos_y, _size__neg_z));
+                _box.AddPoint(new JVector(_size__pos_x, _size__pos_y, _size__neg_z));
+                _box.AddPoint(new JVector(_size__neg_x, _size__pos_y, _size__pos_z));
+                _box.AddPoint(new JVector(_size__pos_x, _size__pos_y, _size__pos_z));
+
+                _buo.FluidBox = _box;
+
+                //_buo.UseOwnFluidArea
+                //Action _action = new Action();
+                //JVector _new_vec = new JVector(0,0,0);
+                //var refreshDXEngineAction = new Action(() =>
+                //{
+                //    _set_fluid_point(ref _new_vec);
+                //});
+
+                Jitter.Forces.Buoyancy.DefineFluidArea test = new Jitter.Forces.Buoyancy.DefineFluidArea(ref _set_fluid_point);
+                _buo.UseOwnFluidArea(test);
+
+
+
+                //_buo.FluidBox = JBBox.LargeBox;
+                _buo.Density = 2.0f;
+                _buo.Damping = 0.75f;*/
+
+
+
+
+
 
 
 
@@ -561,6 +1074,10 @@ namespace SCCoreSystems.SC_Graphics
                 instancesDataUP = new DInstanceData[instX * instY * instZ];
                 instancesDataRIGHT = new DInstanceData[instX * instY * instZ];
 
+
+                //Random r = new Random();
+                //int rInt = r.Next(0, 100);
+
                 count = 0;
                 for (int x = 0; x < instX; x++)
                 {
@@ -568,53 +1085,459 @@ namespace SCCoreSystems.SC_Graphics
                     {
                         for (int z = 0; z < instZ; z++)
                         {
-
-                            Vector3 position = new Vector3((x * _sizeX) + offsetPosX, (y * _sizeY) + offsetPosY, (z * _sizeZ) + offsetPosZ);
-                            Matrix _tempMatrix = matroxer;
-                            position.X += matroxer.M41;
-                            position.Y += matroxer.M42;
-                            position.Z += matroxer.M43;
-
-                            instances[count] = new DInstanceType()
+                            if (type_of_cube == 0)
                             {
-                                position = new Vector4(position.X, position.Y, position.Z, 1)
-                            };
+                                Vector3 position = new Vector3((x * _sizeX) + offsetPosX, (y * _sizeY) + offsetPosY, (z * _sizeZ) + offsetPosZ);
+                                Matrix _tempMatrix = matroxer;
+                                position.X += matroxer.M41;
+                                position.Y += matroxer.M42;
+                                position.Z += matroxer.M43;
 
-                            instancesDataForward[count] = new DInstanceData()
+                                instances[count] = new DInstanceType()
+                                {
+                                    position = new Vector4(position.X, position.Y, position.Z, 1)
+                                };
+
+                                instancesDataForward[count] = new DInstanceData()
+                                {
+                                    rotation = new Vector4(0, 0, 0, 1)
+                                };
+
+                                _tempMatrix.M41 = position.X;
+                                _tempMatrix.M42 = position.Y;
+                                _tempMatrix.M43 = position.Z;
+
+                                SC_jitter_cloth_instances _cube = new SC_jitter_cloth_instances();
+
+                                _cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * 2 * (1 + (0.01f)), _sizeY * 2 * (1 + (0.01f)), _sizeZ * 2 * (1 + (0.01f))));
+                                _cube.transform.Component.rigidbody.Position = new Jitter.LinearMath.JVector(_tempMatrix.M41, _tempMatrix.M42, _tempMatrix.M43);
+                                _cube.transform.Component.rigidbody.Orientation = Conversion.ToJitterMatrix(_tempMatrix);
+                                _cube.transform.Component.rigidbody.LinearVelocity = new Jitter.LinearMath.JVector(0, 0, 0);
+                                _cube.transform.Component.rigidbody.IsStatic = _is_static;
+                                _cube.transform.Component.rigidbody.Tag = _tag;// SC_console_directx.BodyTag._terrain;
+                                _cube.transform.Component.rigidbody.Material.Restitution = 0.015f; //0.015f
+                                _cube.transform.Component.rigidbody.Material.StaticFriction = 0.55f; // 0.55f
+                                _cube.transform.Component.rigidbody.Material.KineticFriction = 0.55f; //0.55f
+
+                                //_cube.transform.Component.rigidbody.Damping = RigidBody.DampingType.Linear;
+                                _cube.transform.Component.rigidbody.AllowDeactivation = false;
+                                _cube.transform.Component.rigidbody.Mass = _mass;
+                                _cube.current_pos = _tempMatrix;
+                                _cube._POSITION = _tempMatrix;
+                                if (_addtoworld == 1)
+                                {
+
+                                }
+                                _arrayOfInstances[count] = _cube;
+                                _arrayOfInstances[count]._POSITION = _tempMatrix;
+                                //_buo.Add(_cube.transform.Component.rigidbody, 3);
+                                //_the_world.AddBody(_cube.transform.Component.rigidbody);
+                                //_cube._POSITION = _tempMatrix;
+
+                                //_singleObjectOnly = _cube;
+                            }
+                            else if (type_of_cube == 1) // JITTER SPHERE
                             {
-                                rotation = new Vector4(0, 0, 0, 1)
-                            };
+                                Vector3 position = new Vector3(x * offsetPosX, y * offsetPosY, z * offsetPosZ);
+                                Matrix _tempMatrix = matroxer;
+                                position.X += matroxer.M41;
+                                position.Y += matroxer.M42;
+                                position.Z += matroxer.M43;
 
-                            _tempMatrix.M41 = position.X;
-                            _tempMatrix.M42 = position.Y;
-                            _tempMatrix.M43 = position.Z;
+                                instances[count] = new DInstanceType()
+                                {
+                                    position = new Vector4(position.X, position.Y, position.Z, 1)
+                                };
 
-                            SC_jitter_cloth_instances _jitter_cloth = new SC_jitter_cloth_instances();
+                                instancesDataForward[count] = new DInstanceData()
+                                {
+                                    rotation = new Vector4(0, 0, 0, 1)
+                                };
 
-                            _jitter_cloth.transform.Component.softbody = new SoftBody(indicess, verticess);
-                            _jitter_cloth.transform.Component.softbody.Mass = 0.01f;
-                            _jitter_cloth.transform.Component.softbody.TriangleExpansion = 0.010f;
-                            _jitter_cloth.transform.Component.softbody.VertexExpansion = 0.01f;
-                            _jitter_cloth.transform.Component.softbody.Tag = SCCoreSystems.sc_console.SC_console_directx.BodyTag.sc_jitter_cloth;
+                                _tempMatrix.M41 = position.X;
+                                _tempMatrix.M42 = position.Y;
+                                _tempMatrix.M43 = position.Z;
 
-                            _jitter_cloth.transform.Component.softbody.Pressure = 15; //0.00075f
-                            _jitter_cloth._POSITION = _tempMatrix;
+                                SC_jitter_cloth_instances _cube = new SC_jitter_cloth_instances();
+                                if (_addtoworld == 1)
+                                {
 
-                            _jitter_cloth.transform.Component.softbody.Material.KineticFriction = 10;
-                            _jitter_cloth.transform.Component.softbody.Material.StaticFriction = 10;
-                            _jitter_cloth.transform.Component.softbody.Material.Restitution = 0.015f;
 
-                            _jitter_cloth.transform.Component.softbody.SetSpringValues(SoftBody.SpringType.EdgeSpring, 0.1f, 0.001f);
-                            _jitter_cloth.transform.Component.softbody.SetSpringValues(SoftBody.SpringType.ShearSpring, 0.1f, 0.001f);
-                            _jitter_cloth.transform.Component.softbody.SetSpringValues(SoftBody.SpringType.BendSpring, 0.1f, 0.001f);
-                            //_jitter_cloth.transform.Component.softbody.SelfCollision = true;
-                            var _vertexBodies = _jitter_cloth.transform.Component.softbody.VertexBodies;
+                                }
+                                //_cube._POSITION = _tempMatrix;
 
-                            for (int i = 0; i < _vertexBodies.Count; i++)
+                                _cube.transform.Component.rigidbody = new RigidBody(new SphereShape(radius));
+
+
+
+                                _cube.transform.Component.rigidbody.Position = new Jitter.LinearMath.JVector(_tempMatrix.M41, _tempMatrix.M42, _tempMatrix.M43);
+                                _cube.transform.Component.rigidbody.Orientation = Conversion.ToJitterMatrix(_tempMatrix);
+                                _cube.transform.Component.rigidbody.LinearVelocity = new Jitter.LinearMath.JVector(0, 0, 0);
+                                _cube.transform.Component.rigidbody.IsStatic = _is_static;
+                                _cube.transform.Component.rigidbody.Tag = _tag;//SC_console_directx.BodyTag._terrain_tiles; 
+
+                                _cube.transform.Component.rigidbody.Material.Restitution = 0.015f; //0.015f
+                                _cube.transform.Component.rigidbody.Material.StaticFriction = 0.55f; // 0.55f
+                                _cube.transform.Component.rigidbody.Material.KineticFriction = 0.55f; //0.55f
+
+                                //_cube.transform.Component.rigidbody.Damping = RigidBody.DampingType.Linear;
+
+                                _cube.transform.Component.rigidbody.Mass = _mass;
+                                _cube.transform.Component.rigidbody.AllowDeactivation = false;
+                                _cube.current_pos = _tempMatrix;
+                                _arrayOfInstances[count] = _cube;
+                                _arrayOfInstances[count]._POSITION = _tempMatrix;
+                                _the_world.AddBody(_cube.transform.Component.rigidbody);
+                                //_buo.Add(_cube.transform.Component.rigidbody, 3);
+                                //_singleObjectOnly = _cube;
+                            }
+                            else if (type_of_cube == 2)
                             {
-                                var singleVertexBody = _vertexBodies[i];
-                                singleVertexBody.Mass = 0.5f;
-                                //singleVertexBody.Position += new JVector(posX, posY, posZ);
+                                Vector3 position = new Vector3((x * _sizeX * 2.5f) + offsetPosX, (y * _sizeY * 2.5f) + offsetPosY, (z * _sizeZ * 2.5f) + offsetPosZ);
+                                //Vector3 position = new Vector3(x + offsetPosX, y + offsetPosY, z + offsetPosZ);
+                                Matrix _tempMatrix = matroxer;
+                                position.X += matroxer.M41;
+                                position.Y += matroxer.M42;
+                                position.Z += matroxer.M43;
+
+                                instances[count] = new DInstanceType()
+                                {
+                                    position = new Vector4(position.X, position.Y, position.Z, 1)
+                                };
+
+                                instancesDataForward[count] = new DInstanceData()
+                                {
+                                    rotation = new Vector4(0, 0, 0, 1)
+                                };
+                                _tempMatrix.M41 = position.X;
+                                _tempMatrix.M42 = position.Y;
+                                _tempMatrix.M43 = position.Z;
+
+                                SC_jitter_cloth_instances _cube = new SC_jitter_cloth_instances();
+                                if (_addtoworld == 1)
+                                {
+                                    _cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * 2 * 1.01f, _sizeY * 2 * 1.01f, _sizeZ * 2 * 1.01f));
+                                    _cube.transform.Component.rigidbody.Position = new Jitter.LinearMath.JVector(_tempMatrix.M41, _tempMatrix.M42, _tempMatrix.M43);
+                                    _cube.transform.Component.rigidbody.Orientation = Conversion.ToJitterMatrix(_tempMatrix);
+                                    _cube.transform.Component.rigidbody.LinearVelocity = new Jitter.LinearMath.JVector(0, 0, 0);
+                                    _cube.transform.Component.rigidbody.IsStatic = _is_static;
+                                    _cube.transform.Component.rigidbody.Tag = _tag;//SC_console_directx.BodyTag.physicsInstancedCube;
+
+                                    _cube.transform.Component.rigidbody.Material.Restitution = 0.015f; //0.015f
+                                    _cube.transform.Component.rigidbody.Material.StaticFriction = 0.55f; // 0.55f
+                                    _cube.transform.Component.rigidbody.Material.KineticFriction = 0.55f; //0.55f
+                                    // _cube.transform.Component.rigidbody.Damping = RigidBody.DampingType.Linear;
+                                    _cube.transform.Component.rigidbody.AllowDeactivation = false;
+                                    _cube.transform.Component.rigidbody.Mass = _mass;
+
+                                    _cube.current_pos = _tempMatrix;
+                                    //SC_Console_GRAPHICS._buo.Add(_cube.transform.Component.rigidbody, 3);
+                                    _the_world.AddBody(_cube.transform.Component.rigidbody);
+                                }
+                                //_cube._POSITION = _tempMatrix;
+                                _arrayOfInstances[count] = _cube;
+                                _arrayOfInstances[count]._POSITION = _tempMatrix;
+                                //_singleObjectOnly = _cube;
+                            }
+                            else if (type_of_cube == 3) // PHYSICS CUBES
+                            {
+                                Vector3 position = new Vector3(x * offsetPosX, y * offsetPosY, z * offsetPosZ);
+                                Matrix _tempMatrix = matroxer;
+                                position.X += matroxer.M41;
+                                position.Y += matroxer.M42;
+                                position.Z += matroxer.M43;
+
+                                instances[count] = new DInstanceType()
+                                {
+                                    position = new Vector4(position.X, position.Y, position.Z, 1)
+                                };
+
+                                instancesDataForward[count] = new DInstanceData()
+                                {
+                                    rotation = new Vector4(0, 0, 0, 1)
+                                };
+                                _tempMatrix.M41 = position.X;
+                                _tempMatrix.M42 = position.Y;
+                                _tempMatrix.M43 = position.Z;
+
+                                SC_jitter_cloth_instances _cube = new SC_jitter_cloth_instances();
+                                if (_addtoworld == 1)
+                                {
+                                    _cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * 2 * 1.01f, _sizeY * 2 * 1.01f, _sizeZ * 2 * 1.01f));
+                                    _cube.transform.Component.rigidbody.Position = new Jitter.LinearMath.JVector(_tempMatrix.M41, _tempMatrix.M42, _tempMatrix.M43);
+                                    _cube.transform.Component.rigidbody.Orientation = Conversion.ToJitterMatrix(_tempMatrix);
+                                    _cube.transform.Component.rigidbody.LinearVelocity = new Jitter.LinearMath.JVector(0, 0, 0);
+                                    _cube.transform.Component.rigidbody.IsStatic = _is_static;
+                                    _cube.transform.Component.rigidbody.Tag = _tag;//SC_console_directx.BodyTag.physicsInstancedCube;
+
+                                    _cube.transform.Component.rigidbody.Material.Restitution = 0.015f; //0.015f
+                                    _cube.transform.Component.rigidbody.Material.StaticFriction = 0.55f; // 0.55f
+                                    _cube.transform.Component.rigidbody.Material.KineticFriction = 0.55f; //0.55f
+
+                                    //_cube.transform.Component.rigidbody.Damping = RigidBody.DampingType.Linear;
+
+                                    //Console.WriteLine();
+                                    _cube.transform.Component.rigidbody.AllowDeactivation = false;
+                                    _cube.transform.Component.rigidbody.Mass = _mass;
+
+                                    _cube.current_pos = _tempMatrix;
+
+                                    _the_world.AddBody(_cube.transform.Component.rigidbody);
+                                    //_buo.Add(_cube.transform.Component.rigidbody, 3);
+                                }                                //_cube._POSITION = _tempMatrix;
+                                _arrayOfInstances[count] = _cube;
+                                _arrayOfInstances[count]._POSITION = _tempMatrix;
+                                //_singleObjectOnly = _cube;
+                            }
+
+                            else if (type_of_cube == 4)
+                            {
+                                Vector3 position = new Vector3(x * offsetPosX, y * offsetPosY, z * offsetPosZ);
+                                Matrix _tempMatrix = matroxer;
+                                position.X += matroxer.M41;
+                                position.Y += matroxer.M42;
+                                position.Z += matroxer.M43;
+
+                                instances[count] = new DInstanceType()
+                                {
+                                    position = new Vector4(position.X, position.Y, position.Z, 1)
+                                };
+
+                                instancesDataForward[count] = new DInstanceData()
+                                {
+                                    rotation = new Vector4(0, 0, 0, 1)
+                                };
+                                _tempMatrix.M41 = position.X;
+                                _tempMatrix.M42 = position.Y;
+                                _tempMatrix.M43 = position.Z;
+
+                                SC_jitter_cloth_instances _cube = new SC_jitter_cloth_instances();
+                                if (_addtoworld == 1)
+                                {
+                                    _cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * 2, _sizeY * 2, _sizeZ * 2));
+                                    _cube.transform.Component.rigidbody.Position = new Jitter.LinearMath.JVector(_tempMatrix.M41, _tempMatrix.M42, _tempMatrix.M43);
+                                    _cube.transform.Component.rigidbody.Orientation = Conversion.ToJitterMatrix(_tempMatrix);
+                                    _cube.transform.Component.rigidbody.LinearVelocity = new Jitter.LinearMath.JVector(0, 0, 0);
+                                    _cube.transform.Component.rigidbody.IsStatic = _is_static;
+                                    _cube.transform.Component.rigidbody.Tag = _tag;//SC_console_directx.BodyTag.physicsInstancedCube;
+
+                                    _cube.transform.Component.rigidbody.Material.Restitution = 0.015f; //0.015f
+                                    _cube.transform.Component.rigidbody.Material.StaticFriction = 0.55f; // 0.55f
+                                    _cube.transform.Component.rigidbody.Material.KineticFriction = 0.55f; //0.55f
+
+                                    //_cube.transform.Component.rigidbody.Damping = RigidBody.DampingType.Linear;
+
+                                    //Console.WriteLine();
+
+                                    _cube.transform.Component.rigidbody.Mass = _mass;
+
+                                    _cube.current_pos = _tempMatrix;
+                                    _cube.transform.Component.rigidbody.AllowDeactivation = false;
+                                    _the_world.AddBody(_cube.transform.Component.rigidbody);
+                                    //_buo.Add(_cube.transform.Component.rigidbody, 3);
+                                }                                //_cube._POSITION = _tempMatrix;
+                                _arrayOfInstances[count] = _cube;
+                                _arrayOfInstances[count]._POSITION = _tempMatrix;
+                                //_singleObjectOnly = _cube;
+                            }
+                            else if (type_of_cube == 6) // capsule
+                            {
+                                Vector3 position = new Vector3((x * _sizeX * 5) + offsetPosX, (y * _sizeY * 5) + offsetPosY, (z * _sizeZ * 5) + offsetPosZ);
+                                //Vector3 position = new Vector3(x + offsetPosX, y + offsetPosY, z + offsetPosZ);
+                                Matrix _tempMatrix = matroxer;
+                                position.X += matroxer.M41;
+                                position.Y += matroxer.M42;
+                                position.Z += matroxer.M43;
+
+                                instances[count] = new DInstanceType()
+                                {
+                                    position = new Vector4(position.X, position.Y, position.Z, 1)
+                                };
+
+                                instancesDataForward[count] = new DInstanceData()
+                                {
+                                    rotation = new Vector4(0, 0, 0, 1)
+                                };
+                                _tempMatrix.M41 = position.X;
+                                _tempMatrix.M42 = position.Y;
+                                _tempMatrix.M43 = position.Z;
+
+                                SC_jitter_cloth_instances _cube = new SC_jitter_cloth_instances();
+                                if (_addtoworld == 1)
+                                {
+                                    //_cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * 2 * 1.01f, _sizeY * 2 * 1.01f, _sizeZ * 2 * 1.01f));
+
+                                    _cube.transform.Component.rigidbody = new RigidBody(new CapsuleShape(length * 0.1f, radius));
+
+                                    _cube.transform.Component.rigidbody.Position = new Jitter.LinearMath.JVector(_tempMatrix.M41, _tempMatrix.M42, _tempMatrix.M43);
+                                    _cube.transform.Component.rigidbody.Orientation = Conversion.ToJitterMatrix(_tempMatrix);
+                                    _cube.transform.Component.rigidbody.LinearVelocity = new Jitter.LinearMath.JVector(0, 0, 0);
+                                    _cube.transform.Component.rigidbody.IsStatic = _is_static;
+                                    _cube.transform.Component.rigidbody.Tag = _tag;//SC_console_directx.BodyTag.physicsInstancedCube;
+
+                                    _cube.transform.Component.rigidbody.Material.Restitution = 0.015f; //0.015f
+                                    _cube.transform.Component.rigidbody.Material.StaticFriction = 0.55f; // 0.55f
+                                    _cube.transform.Component.rigidbody.Material.KineticFriction = 0.55f; //0.55f
+                                    // _cube.transform.Component.rigidbody.Damping = RigidBody.DampingType.Linear;
+                                    _cube.transform.Component.rigidbody.AllowDeactivation = false;
+                                    _cube.transform.Component.rigidbody.Mass = _mass;
+
+                                    _cube.current_pos = _tempMatrix;
+                                    //SC_Console_GRAPHICS._buo.Add(_cube.transform.Component.rigidbody, 3);
+                                    _the_world.AddBody(_cube.transform.Component.rigidbody);
+                                }
+                                //_cube._POSITION = _tempMatrix;
+                                _arrayOfInstances[count] = _cube;
+                                _arrayOfInstances[count]._POSITION = _tempMatrix;
+                                //_singleObjectOnly = _cube;
+                            }
+
+                            else if (type_of_cube == 7) //cone
+                            {
+                                Vector3 position = new Vector3((x * _sizeX * 5) + offsetPosX, (y * _sizeY * 5) + offsetPosY, (z * _sizeZ * 5) + offsetPosZ);
+                                //Vector3 position = new Vector3(x + offsetPosX, y + offsetPosY, z + offsetPosZ);
+                                Matrix _tempMatrix = matroxer;
+                                position.X += matroxer.M41;
+                                position.Y += matroxer.M42;
+                                position.Z += matroxer.M43;
+
+                                instances[count] = new DInstanceType()
+                                {
+                                    position = new Vector4(position.X, position.Y, position.Z, 1)
+                                };
+
+                                instancesDataForward[count] = new DInstanceData()
+                                {
+                                    rotation = new Vector4(0, 0, 0, 1)
+                                };
+                                _tempMatrix.M41 = position.X;
+                                _tempMatrix.M42 = position.Y;
+                                _tempMatrix.M43 = position.Z;
+
+                                SC_jitter_cloth_instances _cube = new SC_jitter_cloth_instances();
+                                if (_addtoworld == 1)
+                                {
+                                    //_cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * 2 * 1.01f, _sizeY * 2 * 1.01f, _sizeZ * 2 * 1.01f));
+                                    //_cube.transform.Component.rigidbody = new RigidBody(new CapsuleShape(_sizeX * 50 * 0.5f, tileSize * 0.5f * 0.5f));
+                                    _cube.transform.Component.rigidbody = new RigidBody(new ConeShape(height * 3, radius * 3));
+                                    _cube.transform.Component.rigidbody.Position = new Jitter.LinearMath.JVector(_tempMatrix.M41, _tempMatrix.M42, _tempMatrix.M43);
+                                    _cube.transform.Component.rigidbody.Orientation = Conversion.ToJitterMatrix(_tempMatrix);
+                                    _cube.transform.Component.rigidbody.LinearVelocity = new Jitter.LinearMath.JVector(0, 0, 0);
+                                    _cube.transform.Component.rigidbody.IsStatic = _is_static;
+                                    _cube.transform.Component.rigidbody.Tag = _tag;//SC_console_directx.BodyTag.physicsInstancedCube;
+
+                                    _cube.transform.Component.rigidbody.Material.Restitution = 0.015f; //0.015f
+                                    _cube.transform.Component.rigidbody.Material.StaticFriction = 0.55f; // 0.55f
+                                    _cube.transform.Component.rigidbody.Material.KineticFriction = 0.55f; //0.55f
+                                    // _cube.transform.Component.rigidbody.Damping = RigidBody.DampingType.Linear;
+                                    _cube.transform.Component.rigidbody.AllowDeactivation = false;
+                                    _cube.transform.Component.rigidbody.Mass = _mass;
+
+                                    _cube.current_pos = _tempMatrix;
+                                    //SC_Console_GRAPHICS._buo.Add(_cube.transform.Component.rigidbody, 3);
+                                    _the_world.AddBody(_cube.transform.Component.rigidbody);
+                                }
+                                //_cube._POSITION = _tempMatrix;
+                                _arrayOfInstances[count] = _cube;
+                                _arrayOfInstances[count]._POSITION = _tempMatrix;
+                                //_singleObjectOnly = _cube;
+                            }
+                            else if (type_of_cube == 8)
+                            {
+                                Vector3 position = new Vector3((x * _sizeX * 5) + offsetPosX, (y * _sizeY * 5) + offsetPosY, (z * _sizeZ * 5) + offsetPosZ);
+                                //Vector3 position = new Vector3(x + offsetPosX, y + offsetPosY, z + offsetPosZ);
+                                Matrix _tempMatrix = matroxer;
+                                position.X += matroxer.M41;
+                                position.Y += matroxer.M42;
+                                position.Z += matroxer.M43;
+
+                                instances[count] = new DInstanceType()
+                                {
+                                    position = new Vector4(position.X, position.Y, position.Z, 1)
+                                };
+
+                                instancesDataForward[count] = new DInstanceData()
+                                {
+                                    rotation = new Vector4(0, 0, 0, 1)
+                                };
+                                _tempMatrix.M41 = position.X;
+                                _tempMatrix.M42 = position.Y;
+                                _tempMatrix.M43 = position.Z;
+
+                                SC_jitter_cloth_instances _cube = new SC_jitter_cloth_instances();
+                                if (_addtoworld == 1)
+                                {
+                                    //_cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * 2 * 1.01f, _sizeY * 2 * 1.01f, _sizeZ * 2 * 1.01f));
+                                    //_cube.transform.Component.rigidbody = new RigidBody(new CapsuleShape(_sizeX * 50 * 0.5f, tileSize * 0.5f * 0.5f));
+                                    _cube.transform.Component.rigidbody = new RigidBody(new CylinderShape(height * 2, radius));
+
+                                    _cube.transform.Component.rigidbody.Position = new Jitter.LinearMath.JVector(_tempMatrix.M41, _tempMatrix.M42, _tempMatrix.M43);
+                                    _cube.transform.Component.rigidbody.Orientation = Conversion.ToJitterMatrix(_tempMatrix);
+                                    _cube.transform.Component.rigidbody.LinearVelocity = new Jitter.LinearMath.JVector(0, 0, 0);
+                                    _cube.transform.Component.rigidbody.IsStatic = _is_static;
+                                    _cube.transform.Component.rigidbody.Tag = _tag;//SC_console_directx.BodyTag.physicsInstancedCube;
+
+                                    _cube.transform.Component.rigidbody.Material.Restitution = 0.015f; //0.015f
+                                    _cube.transform.Component.rigidbody.Material.StaticFriction = 0.55f; // 0.55f
+                                    _cube.transform.Component.rigidbody.Material.KineticFriction = 0.55f; //0.55f
+                                    // _cube.transform.Component.rigidbody.Damping = RigidBody.DampingType.Linear;
+                                    _cube.transform.Component.rigidbody.AllowDeactivation = false;
+                                    _cube.transform.Component.rigidbody.Mass = _mass;
+
+                                    _cube.current_pos = _tempMatrix;
+                                    //SC_Console_GRAPHICS._buo.Add(_cube.transform.Component.rigidbody, 3);
+                                    _the_world.AddBody(_cube.transform.Component.rigidbody);
+                                }
+                                //_cube._POSITION = _tempMatrix;
+                                _arrayOfInstances[count] = _cube;
+                                _arrayOfInstances[count]._POSITION = _tempMatrix;
+                                //_singleObjectOnly = _cube;
+                            }
+
+                            else if (type_of_cube == 9)
+                            {
+
+                                float sc_dist = 2.25f;
+
+                                Vector3 position = new Vector3(((x + offsetPosX) * _sizeX * sc_dist), ((y + offsetPosY) * _sizeY * sc_dist), ((z + offsetPosZ) * _sizeZ * sc_dist));
+                                //Vector3 position = new Vector3(((x) * _sizeX), ((y )), ((z ) * _sizeZ));
+                                //Vector3 position = new Vector3(x * _sizeX, y * _sizeY, z * _sizeZ);
+                                //Vector3 position = new Vector3(x * offsetPosX, y * offsetPosY, z * offsetPosZ);
+                                //Vector3 position = new Vector3((x * _sizeX) + offsetPosX, (y * _sizeY) + offsetPosY, (z * _sizeZ) + offsetPosZ);
+
+                                Matrix _tempMatrix = matroxer;
+                                position.X += matroxer.M41;
+                                position.Y += matroxer.M42;
+                                position.Z += matroxer.M43;
+
+                                instances[count] = new DInstanceType()
+                                {
+                                    position = new Vector4(position.X, position.Y, position.Z, 1)
+                                };
+
+                                instancesDataForward[count] = new DInstanceData()
+                                {
+                                    rotation = new Vector4(0, 0, 0, 1)
+                                };
+                                _tempMatrix.M41 = position.X;
+                                _tempMatrix.M42 = position.Y;
+                                _tempMatrix.M43 = position.Z;
+
+                                SC_jitter_cloth_instances _cube = new SC_jitter_cloth_instances();
+
+
+                                _cube._POSITION = _tempMatrix;
+                                _cube._ORIGINPOSITION = _tempMatrix;
+                                //_cube._ELBOWCROSSVEC = Vector3.Zero;
+                                _cube._LASTPOSITION = Matrix.Identity;
+                                //_cube._UPPERARMPIVOT = Vector3.Zero;
+
+                                //_cube._ARMLENGTH = _sizeX * ((ChunkWidth_L + ChunkWidth_R));
+                                //_cube._SHOULDERROT = Matrix.Identity;
+                                //_cube._ELBOWPOSITION = Vector3.Zero;
+
+
+                                _arrayOfInstances[count] = _cube;
                             }
 
 
@@ -624,35 +1547,169 @@ namespace SCCoreSystems.SC_Graphics
 
 
 
-
-
-
-
-                            /*_cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * 2 * (1 + (0.01f * tileSize)), _sizeY * 2 * (1 + (0.01f * tileSize)), _sizeZ * 2 * (1 + (0.01f * tileSize))));
-                            _cube.transform.Component.rigidbody.Position = new Jitter.LinearMath.JVector(_tempMatrix.M41, _tempMatrix.M42, _tempMatrix.M43);
-                            _cube.transform.Component.rigidbody.Orientation = Conversion.ToJitterMatrix(_tempMatrix);
-                            _cube.transform.Component.rigidbody.LinearVelocity = new Jitter.LinearMath.JVector(0, 0, 0);
-                            _cube.transform.Component.rigidbody.IsStatic = _is_static;
-                            _cube.transform.Component.rigidbody.Tag = _tag;// SC_console_directx.BodyTag._terrain;
-                            _cube.transform.Component.rigidbody.Material.Restitution = 0.015f; //0.015f
-                            _cube.transform.Component.rigidbody.Material.StaticFriction = 0.55f; // 0.55f
-                            _cube.transform.Component.rigidbody.Material.KineticFriction = 0.55f; //0.55f
-
-                            //_cube.transform.Component.rigidbody.Damping = RigidBody.DampingType.Linear;
-
-                            _cube.transform.Component.rigidbody.Mass = _mass;*/
-                            _jitter_cloth.current_pos = _tempMatrix;
-                            _jitter_cloth._POSITION = _tempMatrix;
-                            if (_addtoworld == 1)
+                            /*else if (isTerrain == 2)
                             {
+                                Vector3 position = new Vector3(x * offsetPosX, y * offsetPosY, z * offsetPosZ);
+                                Matrix _tempMatrix = matroxer;
+                                position.X += matroxer.M41;
+                                position.Y += matroxer.M42;
+                                position.Z += matroxer.M43;
 
+                                instances[count] = new DInstanceType()
+                                {
+                                    position = new Vector4(position.X, position.Y, position.Z, 1)
+                                };
+
+                                instancesData[count] = new DInstanceData()
+                                {
+                                    rotation = new Vector4(0, 0, 0, 1)
+                                };
+                                _tempMatrix.M41 = position.X;
+                                _tempMatrix.M42 = position.Y;
+                                _tempMatrix.M43 = position.Z;
+
+                                SC_jitter_cloth_instances _cube = new SC_jitter_cloth_instances();
+                                _cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * 2, _sizeY * 2, _sizeZ * 2));
+                                _cube.transform.Component.rigidbody.Position = new Jitter.LinearMath.JVector(_tempMatrix.M41, _tempMatrix.M42, _tempMatrix.M43);
+                                _cube.transform.Component.rigidbody.Orientation = Conversion.ToJitterMatrix(_tempMatrix);
+                                _cube.transform.Component.rigidbody.LinearVelocity = new Jitter.LinearMath.JVector(0, 0, 0);
+                                _cube.transform.Component.rigidbody.IsStatic = true;
+                                _cube.transform.Component.rigidbody.Tag = _sc_console_directx.BodyTag.cloth_cube;
+
+
+                                _cube.transform.Component.rigidbody.Material.Restitution = 0.001f;
+                                _cube.transform.Component.rigidbody.Material.StaticFriction = 0.65f;
+                                _cube.transform.Component.rigidbody.Material.KineticFriction = 0.65f;
+
+                                _cube.transform.Component.rigidbody.Mass = _sizeX;
+
+                                _the_world.AddBody(_cube.transform.Component.rigidbody);
+                                //_cube._POSITION = _tempMatrix;
+
+                                _singleObjectOnly = _cube;
                             }
-                            _arrayOfInstances[count] = _jitter_cloth;
-                            //_the_world.AddBody(_cube.transform.Component.rigidbody);
-                            //_cube._POSITION = _tempMatrix;
+                            else if (isTerrain == 3)
+                            {
+                                Vector3 position = new Vector3(x * offsetPosX, y * offsetPosY, z * offsetPosZ);
+                                Matrix _tempMatrix = matroxer;
+                                position.X += matroxer.M41;
+                                position.Y += matroxer.M42;
+                                position.Z += matroxer.M43;
 
-                            //_singleObjectOnly = _cube;
+                                instances[count] = new DInstanceType()
+                                {
+                                    position = new Vector4(position.X, position.Y, position.Z, 1)
+                                };
 
+                                instancesData[count] = new DInstanceData()
+                                {
+                                    rotation = new Vector4(0, 0, 0, 1)
+                                };
+                                _tempMatrix.M41 = position.X;
+                                _tempMatrix.M42 = position.Y;
+                                _tempMatrix.M43 = position.Z;
+
+                                SC_jitter_cloth_instances _cube = new SC_jitter_cloth_instances();
+                                _cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * 2, _sizeY * 2, _sizeZ * 2));
+                                _cube.transform.Component.rigidbody.Position = new Jitter.LinearMath.JVector(_tempMatrix.M41, _tempMatrix.M42, _tempMatrix.M43);
+                                _cube.transform.Component.rigidbody.Orientation = Conversion.ToJitterMatrix(_tempMatrix);
+                                _cube.transform.Component.rigidbody.LinearVelocity = new Jitter.LinearMath.JVector(0, 0, 0);
+                                _cube.transform.Component.rigidbody.IsStatic = true;
+                                _cube.transform.Component.rigidbody.Tag = _sc_console_directx.BodyTag.screen_corners;
+
+
+                                _cube.transform.Component.rigidbody.Material.Restitution = 0.05f;
+                                _cube.transform.Component.rigidbody.Material.StaticFriction = 0.55f;
+                                _cube.transform.Component.rigidbody.Material.KineticFriction = 0.55f;
+
+                                _cube.transform.Component.rigidbody.Mass = _sizeX * 5;
+
+                                _the_world.AddBody(_cube.transform.Component.rigidbody);
+                                //_cube._POSITION = _tempMatrix;
+
+                                _singleObjectOnly = _cube;
+                            }
+                            else if (isTerrain == 4)
+                            {
+                                Vector3 position = new Vector3(x * offsetPosX, y * offsetPosY, z * offsetPosZ);
+                                Matrix _tempMatrix = matroxer;
+                                position.X += matroxer.M41;
+                                position.Y += matroxer.M42;
+                                position.Z += matroxer.M43;
+
+                                instances[count] = new DInstanceType()
+                                {
+                                    position = new Vector4(position.X, position.Y, position.Z, 1)
+                                };
+
+                                instancesData[count] = new DInstanceData()
+                                {
+                                    rotation = new Vector4(0, 0, 0, 1)
+                                };
+                                _tempMatrix.M41 = position.X;
+                                _tempMatrix.M42 = position.Y;
+                                _tempMatrix.M43 = position.Z;
+
+                                SC_jitter_cloth_instances _cube = new SC_jitter_cloth_instances();
+                                _cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * 2, _sizeY * 2, _sizeZ * 2));
+                                _cube.transform.Component.rigidbody.Position = new Jitter.LinearMath.JVector(_tempMatrix.M41, _tempMatrix.M42, _tempMatrix.M43);
+                                _cube.transform.Component.rigidbody.Orientation = Conversion.ToJitterMatrix(_tempMatrix);
+                                _cube.transform.Component.rigidbody.LinearVelocity = new Jitter.LinearMath.JVector(0, 0, 0);
+                                _cube.transform.Component.rigidbody.IsStatic = true;
+                                _cube.transform.Component.rigidbody.Tag = _sc_console_directx.BodyTag.screen_pointer_touch;
+
+
+                                _cube.transform.Component.rigidbody.Material.Restitution = 0.05f;
+                                _cube.transform.Component.rigidbody.Material.StaticFriction = 0.55f;
+                                _cube.transform.Component.rigidbody.Material.KineticFriction = 0.55f;
+
+                                _cube.transform.Component.rigidbody.Mass = _sizeX * 5;
+
+                                _the_world.AddBody(_cube.transform.Component.rigidbody);
+                                //_cube._POSITION = _tempMatrix;
+
+                                _singleObjectOnly = _cube;
+                            }
+                            else if (isTerrain == 5)
+                            {
+                                Vector3 position = new Vector3(x * offsetPosX, y * offsetPosY, z * offsetPosZ);
+                                Matrix _tempMatrix = matroxer;
+                                position.X += matroxer.M41;
+                                position.Y += matroxer.M42;
+                                position.Z += matroxer.M43;
+
+                                instances[count] = new DInstanceType()
+                                {
+                                    position = new Vector4(position.X, position.Y, position.Z, 1)
+                                };
+
+                                instancesData[count] = new DInstanceData()
+                                {
+                                    rotation = new Vector4(0, 0, 0, 1)
+                                };
+                                _tempMatrix.M41 = position.X;
+                                _tempMatrix.M42 = position.Y;
+                                _tempMatrix.M43 = position.Z;
+
+                                SC_jitter_cloth_instances _cube = new SC_jitter_cloth_instances();
+                                _cube.transform.Component.rigidbody = new RigidBody(new BoxShape(_sizeX * 2, _sizeY * 2, _sizeZ * 2));
+                                _cube.transform.Component.rigidbody.Position = new Jitter.LinearMath.JVector(_tempMatrix.M41, _tempMatrix.M42, _tempMatrix.M43);
+                                _cube.transform.Component.rigidbody.Orientation = Conversion.ToJitterMatrix(_tempMatrix);
+                                _cube.transform.Component.rigidbody.LinearVelocity = new Jitter.LinearMath.JVector(0, 0, 0);
+                                _cube.transform.Component.rigidbody.IsStatic = true;
+                                _cube.transform.Component.rigidbody.Tag = _sc_console_directx.BodyTag.screen_pointer_HMD;
+
+
+                                _cube.transform.Component.rigidbody.Material.Restitution = 0.05f;
+                                _cube.transform.Component.rigidbody.Material.StaticFriction = 0.55f;
+                                _cube.transform.Component.rigidbody.Material.KineticFriction = 0.55f;
+
+                                _cube.transform.Component.rigidbody.Mass = _sizeX * 5;
+
+                                _the_world.AddBody(_cube.transform.Component.rigidbody);
+
+                                _singleObjectOnly = _cube;
+                            }*/
 
                             count++;
                         }
