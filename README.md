@@ -37,7 +37,7 @@ sccsv11 - 2nd version - decided to modify a couple of things compared to sccsv10
 
 sc_core_systems - 3rd version. console dotnet directx virtual reality. I decided to script a modified program architecture and the sccsVD4ED and sccsVD4VE are one and the same. sccsVD4ED has the latest updates because microsoft windows 10 voice recognition was working in wpf but not on my console version sc_core_systems.
 
-sccsVD4ED - 3rd version, using wpf. for elite dangerous - the steamVR overlay doesn't work properly yet unfortunately so i cannot have my virtual desktop screen sent to the steamVR overlay c# scripts. So this program doesn't even work with elite dangerous yet.
+sccsVD4ED - 3rd version, using wpf. for elite dangerous - the steamVR overlay doesn't work properly yet unfortunately so i cannot have my virtual desktop screen sent to the steamVR overlay c# scripts. So this program doesn't even work with elite dangerous yet. I was also testing the rastertek heightmaps tutorials as you can see the bumpy grid in the vr character's right hand. 
 <img src="https://i.ibb.co/chZnvY2/sccs-VD4-ED.png" alt="sccs-VD4-ED" border="0">
 
 sccsVD4VE - 3rd version. using wpf. for void expanse. not updated yet with sccsVD4ED tiny changes.
