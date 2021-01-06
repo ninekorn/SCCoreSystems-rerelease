@@ -30,14 +30,17 @@ the username is "9" and the password is "std" for standard.
 List of programs:
 
 sccsv10 - 1st version
+<img src="https://i.ibb.co/LJP0C2W/sccsv10.png" alt="sccsv10" border="0">
 
 sccsv11 - 2nd version
+<img src="https://i.ibb.co/c66WLyn/sccsv11.png" alt="sccsv11" border="0">
 
-sc_core_systems - 3rd version. console dotnet directx virtual reality.
+sc_core_systems - 3rd version. console dotnet directx virtual reality. currently it is not updated with the few modifications i made in sccsVD4ED.
 
 sccsVD4ED - 3rd version, using wpf. for elite dangerous - the steamVR overlay doesn't work properly yet unfortunately so i cannot have my virtual desktop screen sent to the steamVR overlay c# scripts. So this program doesn't even work with elite dangerous yet.
+<img src="https://i.ibb.co/chZnvY2/sccs-VD4-ED.png" alt="sccs-VD4-ED" border="0">
 
-sccsVD4VE - 3rd version. using wpf. for void expanse.
+sccsVD4VE - 3rd version. using wpf. for void expanse. not updated yet with sccsVD4ED tiny changes.
 
 Jitter - the original physics engine.
 
