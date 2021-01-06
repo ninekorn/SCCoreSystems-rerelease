@@ -29,7 +29,7 @@ the username is "9" and the password is "std" for standard.
 
 List of programs:
 
-sccsv10 - 1st version - using instancing but i ended up discarding that program because there was some stuff that wasn't working as expected.
+sccsv10 - 1st version - using instancing but i ended up discarding that program because there was some stuff that wasn't working as expected. I wanted to build some voxel covid19 cloth objects but they ended up looking a bit more like snowflakes.
 <img src="https://i.ibb.co/LJP0C2W/sccsv10.png" alt="sccsv10" border="0">
 
 sccsv11 - 2nd version - decided to modify a couple of things compared to sccsv10 but again, i thought my program architecture was lame.
