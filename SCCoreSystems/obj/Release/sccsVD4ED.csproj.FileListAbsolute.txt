@@ -1,4 +1,3 @@
-C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\SCCoreSystems\obj\Release\sccsVD4ED.csprojAssemblyReference.cache
 C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\SCCoreSystems\obj\Release\MainWindow.g.cs
 C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\SCCoreSystems\obj\Release\App.g.cs
 C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\SCCoreSystems\obj\Release\SCCoreSystems_Content.g.cs
@@ -77,3 +76,4 @@ C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\SCCoreSystems\obj\Rel
 C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\SCCoreSystems\obj\Release\sccsVD4ED.csproj.CopyComplete
 C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\SCCoreSystems\obj\Release\SCCoreSystems.exe
 C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\SCCoreSystems\obj\Release\SCCoreSystems.pdb
+C:\Users\ninekorn\Documents\GitHub\SCCoreSystems-rerelease\SCCoreSystems\obj\Release\sccsVD4ED.csprojAssemblyReference.cache

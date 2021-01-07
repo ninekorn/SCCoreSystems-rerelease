@@ -197,6 +197,7 @@ namespace SCCoreSystems
 
         private const int VK_LEFT = 0x25;
         private const int VK_4 = 0x34;
+        private const int VK_5 = 0x35;
 
         public static int is_wpf = 1;
 
@@ -366,7 +367,7 @@ namespace SCCoreSystems
         public static SharpDX.DirectInput.KeyboardState keyboardstate;
         public static sc_console.sc_console_keyboard_input _keyboard_input;
         static int MaxSizeMainObject = 16;
-        static int MaxSizeMessageObject = 16;
+        public static int MaxSizeMessageObject = 32;
 
         static sc_message_object.sc_message_object[] _main_received_messages;//
         static _messager[] _sec_received_messages;
@@ -381,8 +382,8 @@ namespace SCCoreSystems
         static IntPtr vewindowsfoundedz;// = IntPtr.Zero; // = FindWindow(null, "voidexpanse");
         static IntPtr edwindowsfoundedz;
 
-        int edisrunning = -1;
-        int veisrunning = -1;
+        static int edisrunning = -1;
+        static int veisrunning = -1;
 
         Window _mainWindow; //        //static void Main(string[] args)
         public MainWindow()
@@ -755,7 +756,7 @@ namespace SCCoreSystems
                 //Console.WriteLine("!null rec engine");
 
                 //threadOneGrammarLoad();
-                /*var updateMainUITitle = new Action(() =>
+                var updateMainUITitle = new Action(() =>
                 {
                     if (_UIStarterItemz)
                     {
@@ -766,7 +767,7 @@ namespace SCCoreSystems
                     _mainUpdateThread();
                 });
 
-                Dispatcher.Invoke(updateMainUITitle);*/
+                Dispatcher.Invoke(updateMainUITitle);
 
 
 
@@ -779,11 +780,41 @@ namespace SCCoreSystems
 
             }
             }*/
+            var updateMainUITitle = new Action(() =>
+            {
+                if (_UIStarterItemz == 1)
+                {
+                    threadOneGrammarLoad();
+                    _UIStarterItemz = 2;
+                }
+
+                //_mainUpdateThread();
+            });
+
+            Dispatcher.Invoke(updateMainUITitle);
 
 
-            /**/
+            //vewindowsfoundedz = FindWindow(null, "voidexpanse");
 
-            /*var updateMainUITitle = new Action(() =>
+            Process[] processlist = Process.GetProcesses();
+
+            foreach (Process process in processlist)
+            {
+                if (process.ProcessName.ToLower() == "voidexpanse")
+                {
+                    //Console.WriteLine("Process: {0} ID: {1} Window title: {2}", process.ProcessName, process.Id, process.MainWindowTitle);
+                    //MessageBox((IntPtr)0, "ED" + " " + process.MainWindowHandle, "sccoresystems0", 0);
+                    vewindowsfoundedz = process.MainWindowHandle;
+                }
+            }
+
+
+
+            //MessageBox((IntPtr)0, "" + vewindowsfoundedz, "", 0);
+
+
+           
+            /*var startSomeThread = new Action(() =>
             {
                 //threadOneGrammarLoad();
                 Thread _thread;
@@ -793,7 +824,17 @@ namespace SCCoreSystems
                 _thread.Start();
             });
 
-            System.Windows.Application.Current.Dispatcher.Invoke(updateMainUITitle);*/
+            System.Windows.Application.Current.Dispatcher.Invoke(startSomeThread);*/
+            Thread _thread;
+            _thread = new Thread(() => _mainThreadStarter());
+            _thread.IsBackground = false;
+            _thread.SetApartmentState(ApartmentState.STA);// =;
+            _thread.Start();
+
+
+            //check later in a loop if synth is null or not... and restart the synth later.
+            //SpeechSynthesizer synth = new SpeechSynthesizer();
+
 
 
             for (int j = 0; j < 1; j++)
@@ -817,7 +858,7 @@ namespace SCCoreSystems
                             if (loop_main_thread == 0)
                             {
 
-
+                                SpeechSynthesizer synth = new SpeechSynthesizer();
                                 //_mainFrameStarterItemz = false;
                                 // Some biolerplate to react to close window event, CTRL-C, kill, etc
                                 _handler += new EventHandler(Handler);
@@ -1595,8 +1636,8 @@ namespace SCCoreSystems
                                         hasresetedspeechrecog = 4;
                                         hasresetedspeechrecogcounter = 0;
                                     }
-                                }
-
+                                }*/
+                                /*
                                 if (recEnginer == null)
                                 {
                                     if (_sec_received_messages[14]._swtch0 == -1)
@@ -1707,15 +1748,15 @@ namespace SCCoreSystems
 
                                 //vewindowsfoundedz = FindWindow(null, "voidexpanse");
                                 //edwindowsfoundedz = FindWindow(null, "elitedangerous64");
-
-                                /*if (veisrunning != 1)
+                                
+                                if (veisrunning == 0)
                                 {
                                     //edwindowsfoundedz = FindWindow(null, "EliteDangerous64");
                                     vewindowsfoundedz = FindWindow(null, "voidexpanse");
+
                                     if (vewindowsfoundedz != IntPtr.Zero)
                                     {
-                                        SpeechSynthesizer synth = new SpeechSynthesizer();
-
+                                        //SpeechSynthesizer synth = new SpeechSynthesizer();
                                         // Configure the audio output.   
                                         synth.SetOutputToDefaultAudioDevice();
 
@@ -1730,9 +1771,37 @@ namespace SCCoreSystems
                                     }
                                     else
                                     {
+                                        //SpeechSynthesizer synth = new SpeechSynthesizer();
+                                        synth.SetOutputToDefaultAudioDevice();
+                                        synth.Speak("Void Expanse has stopped running");
                                         Console.WriteLine("synth not working");
+                                        veisrunning = 2;
                                     }
-                                }*/
+                                }
+                                else if (veisrunning == 2)
+                                {
+                                    //var msg = "void expanse is not running.";
+                                    _sec_received_messages[16]._message = msgVoidExpanseDisabled;
+                                    _sec_received_messages[16]._originalMsg = msgVoidExpanseDisabled;
+                                    _sec_received_messages[16]._messageCut = msgVoidExpanseDisabled;
+                                    _sec_received_messages[16]._specialMessage = 3;
+                                    _sec_received_messages[16]._specialMessageLineX = 0;
+                                    _sec_received_messages[16]._specialMessageLineY = 0;
+                                    _sec_received_messages[16]._orilineX = 1;// _sec_received_messages[16]._orilineX + msgVoidExpanseDisabled.Length + 1;
+                                    _sec_received_messages[16]._orilineY = 10;// _sec_received_messages[16]._orilineY;
+                                    _sec_received_messages[16]._lineX = _sec_received_messages[16]._orilineX + msgVoidExpanseDisabled.Length + 1;
+                                    _sec_received_messages[16]._lineY = _sec_received_messages[16]._orilineY;
+                                    _sec_received_messages[16]._count = 0;
+                                    _sec_received_messages[16]._swtch0 = 1;
+                                    _sec_received_messages[16]._swtch1 = 1;
+                                    _sec_received_messages[16]._delay = 7;
+                                    _sec_received_messages[16]._looping = 1;
+
+                                    veisrunning = 3;
+                                }
+
+
+
 
                                 /*edwindowsfoundedz = FindWindow(null, "EDLaunch.exe");
                                 if (edwindowsfoundedz != IntPtr.Zero)
@@ -2154,11 +2223,11 @@ namespace SCCoreSystems
             {
                 while (true)
                 {
-                    if (_UIStarterItemz == 1)
+                    /*if (_UIStarterItemz == 1)
                     {
-                        threadOneGrammarLoad();
+                        //threadOneGrammarLoad();
                         _UIStarterItemz = 0;
-                    }
+                    }*/
                     /*var updateMainUITitle = new Action(() =>
                     {
                         if (_UIStarterItemz == 1)
@@ -2172,7 +2241,7 @@ namespace SCCoreSystems
 
                     Dispatcher.Invoke(updateMainUITitle);*/ //System.Windows.Application.Current.
 
-                    if (_mainThreadStarterItemsBool)
+                    /*if (_mainThreadStarterItemsBool)
                     {
                         var _threadID = 0;
                         //threadOneGrammarLoad();
@@ -2181,11 +2250,11 @@ namespace SCCoreSystems
                         /*for (int i = 0; i < _totalThreads; i++)
                         {
                             _workThread = new workerThreads(i);
-                        }*/
+                        }
 
-                        /*var updateMainUITitle = new Action(() =>
+                        var updateMainUITitle = new Action(() =>
                         {
-                            if (_UIStarterItemz == 1)
+                            /*if (_UIStarterItemz == 1)
                             {
                                 threadOneGrammarLoad();
                                 _UIStarterItemz = 0;
@@ -2194,7 +2263,7 @@ namespace SCCoreSystems
                             _mainUpdateThread();
                         });
 
-                        Dispatcher.Invoke(updateMainUITitle);*/
+                        Dispatcher.Invoke(updateMainUITitle);
 
 
 
@@ -2202,9 +2271,11 @@ namespace SCCoreSystems
 
 
                         _mainThreadStarterItemsBool = false;
-                    }
-
+                    }*/
+                    _mainUpdateThread();
                     _mainThreadFrameCounter++;
+
+                    //Console.WriteLine("test");
                     Thread.Sleep(1);
                 }
             }
@@ -2216,11 +2287,344 @@ namespace SCCoreSystems
 
         public static int _UIStarterItemz = 1;
 
+
+        static int hasSpoken = 0;
+        static int keyboardclickscounter = 0;
+        static int keyboardclicksend = 0;
+        static int maxkeyframe = 0;
+
+
+
+        static int isDispatching = 0;
+
+
         //UI THREAD TEST
         //////////////////////////////////
         //////////////////////////////////
         public static void _mainUpdateThread()
         {
+            if (hasSpoken == 1)
+            {
+                if (lastWord == "dispatch" && isDispatching == 0)
+                {
+                    resetVoidExpanserecog.Restart();
+                    counterForResetingVoidExpanseMenu = 0;
+                    if (keyboardclickscounter >= 35)
+                    {
+                        keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                        keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+                        //PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 0);
+                        //PostMessage(vewindowsfoundedz, WM_KEYUP, VK_4, 0);
+
+                        //Console.WriteLine("test0");
+                        keyboardclicksend++;
+                        keyboardclickscounter = 0;
+                    }
+
+                    //keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                    //keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+
+                    //keyboardclicksend++;
+
+                    if (keyboardclicksend >= 2)
+                    {
+                        isDispatching = 1;
+                        keyboardclicksend = 0;
+                        hasSpoken = 0;
+                    }
+
+                    /*if (keyboardclickscounter >= 0)
+                    {
+                        keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                        keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+                        Console.WriteLine("test0");
+                        keyboardclicksend++;
+                        keyboardclickscounter = 0;
+                    }
+
+                    if (keyboardclicksend >= 1)
+                    {
+                        keyboardclicksend = 0;
+                        hasSpoken = 0;
+                    }*/
+                    //Console.WriteLine("test0");
+                }
+                else if (lastWord == "market")
+                {
+                    resetVoidExpanserecog.Restart();
+                    counterForResetingVoidExpanseMenu = 0;
+                    if (keyboardclickscounter >= 35)
+                    {
+                        //PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 1);
+                        //PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 0);
+                        //PostMessage(vewindowsfoundedz, WM_KEYUP, VK_4, 0);
+                        //SendMessage(vewindowsfoundedz, WM, VK_4, 0);
+                        keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                        keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+
+                        //Console.WriteLine("test1");
+
+                        keyboardclicksend++;
+                        keyboardclickscounter = 0;
+                    }
+
+                    //keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                    //keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+
+                    //keyboardclicksend++;
+
+                    if (keyboardclicksend >= 1)
+                    {
+                        keyboardclicksend = 0;
+                        hasSpoken = 0;
+                    }
+                }
+                else if (lastWord == "release" && isDispatching  == 1)
+                {
+                    resetVoidExpanserecog.Restart();
+                    counterForResetingVoidExpanseMenu = 0;
+                    if (keyboardclickscounter >= 35)
+                    {
+                        //PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 1);
+                        //PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 0);
+                        //PostMessage(vewindowsfoundedz, WM_KEYUP, VK_4, 0);
+                        //SendMessage(vewindowsfoundedz, WM, VK_4, 0);
+                        keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                        keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+
+                        //Console.WriteLine("test1");
+
+                        keyboardclicksend++;
+                        keyboardclickscounter = 0;
+                    }
+
+                    //keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                    //keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+
+                    //keyboardclicksend++;
+
+                    if (keyboardclicksend >= 2)
+                    {
+                        isDispatching = 2;
+                        keyboardclicksend = 0;
+                        hasSpoken = 0;
+                    }
+                }
+                else if (lastWord == "retrieve" && isDispatching == 1)
+                {
+                    resetVoidExpanserecog.Restart();
+                    counterForResetingVoidExpanseMenu = 0;
+                    if (keyboardclickscounter >= 35)
+                    {
+                        //PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 1);
+                        //PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 0);
+                        //PostMessage(vewindowsfoundedz, WM_KEYUP, VK_4, 0);
+                        //SendMessage(vewindowsfoundedz, WM, VK_4, 0);
+                        keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                        keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+
+                        //Console.WriteLine("test1");
+
+                        keyboardclicksend++;
+                        keyboardclickscounter = 0;
+                    }
+
+                    //keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                    //keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+
+                    //keyboardclicksend++;
+
+                    if (keyboardclicksend >= 3)
+                    {
+                        isDispatching = 2;
+                        keyboardclicksend = 0;
+                        hasSpoken = 0;
+                    }
+                }
+                else if (lastWord == "combat" && isDispatching == 2)
+                {
+                    resetVoidExpanserecog.Restart();
+                    counterForResetingVoidExpanseMenu = 0;
+                    if (keyboardclickscounter >= 35)
+                    {
+                        //PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 1);
+                        //PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 0);
+                        //PostMessage(vewindowsfoundedz, WM_KEYUP, VK_4, 0);
+                        //SendMessage(vewindowsfoundedz, WM, VK_4, 0);
+                        keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                        keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+
+                        //Console.WriteLine("test1");
+
+                        keyboardclicksend++;
+                        keyboardclickscounter = 0;
+                    }
+
+                    //keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                    //keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+
+                    //keyboardclicksend++;
+
+                    if (keyboardclicksend >= 2)
+                    {
+                        isDispatching = 0;
+                        keyboardclicksend = 0;
+                        hasSpoken = 0;
+                    }
+                }
+                else if (lastWord == "repair" && isDispatching == 2)
+                {
+                    resetVoidExpanserecog.Restart();
+                    counterForResetingVoidExpanseMenu = 0;
+                    if (keyboardclickscounter >= 35)
+                    {
+                        //PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 1);
+                        //PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 0);
+                        //PostMessage(vewindowsfoundedz, WM_KEYUP, VK_4, 0);
+                        //SendMessage(vewindowsfoundedz, WM, VK_4, 0);
+                        keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                        keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+
+                        //Console.WriteLine("test1");
+
+                        keyboardclicksend++;
+                        keyboardclickscounter = 0;
+                    }
+
+                    //keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                    //keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+
+                    //keyboardclicksend++;
+
+                    if (keyboardclicksend >= 3)
+                    {
+                        isDispatching = 0;
+                        keyboardclicksend = 0;
+                        hasSpoken = 0;
+                    }
+                }
+                else if (lastWord == "mining" && isDispatching == 2)
+                {
+                    resetVoidExpanserecog.Restart();
+                    counterForResetingVoidExpanseMenu = 0;
+                    if (keyboardclickscounter >= 35)
+                    {
+                        //PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 1);
+                        //PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 0);
+                        //PostMessage(vewindowsfoundedz, WM_KEYUP, VK_4, 0);
+                        //SendMessage(vewindowsfoundedz, WM, VK_4, 0);
+                        keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                        keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+
+                        //Console.WriteLine("test1");
+
+                        keyboardclicksend++;
+                        keyboardclickscounter = 0;
+                    }
+
+                    //keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                    //keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+
+                    //keyboardclicksend++;
+
+                    if (keyboardclicksend >= 4)
+                    {
+                        isDispatching = 0;
+                        keyboardclicksend = 0;
+                        hasSpoken = 0;
+                    }
+                }
+                else if (lastWord == "start")
+                {
+                    resetVoidExpanserecog.Restart();
+                    counterForResetingVoidExpanseMenu = 0; 
+                    //veisrunning = 0;
+                    if (recEnginer == null)
+                    {
+                        try
+                        {
+                            //gb = new GrammarBuilder();
+                            //gb.Append(mychoices);
+                            //mygrammar = new Grammar(gb);
+                            //recEnginer.LoadGrammarAsync(mygrammar);
+
+                            recEnginer.SpeechRecognized -= new EventHandler<SpeechRecognizedEventArgs>(recEngine_SpeechRecognized);
+
+                            //recEnginer.SetInputToDefaultAudioDevice();
+                            //recEnginer.RecognizeAsync(RecognizeMode.Multiple);
+                        }
+                        catch (Exception ex)
+                        {
+                            MainWindow.MessageBox((IntPtr)0, "" + ex.ToString(), "sc core systems message", 0);
+                        }
+                    }
+
+                    hasSpoken = 0;
+                }
+                else if (lastWord == "stop")
+                {
+                    resetVoidExpanserecog.Restart();
+                    counterForResetingVoidExpanseMenu = 0;
+                    try
+                    {
+                        //gb = new GrammarBuilder();
+                        //gb.Append(mychoices);
+                        //mygrammar = new Grammar(gb);
+                        //recEnginer.LoadGrammarAsync(mygrammar);
+
+                        recEnginer.SpeechRecognized -= new EventHandler<SpeechRecognizedEventArgs>(recEngine_SpeechRecognized);
+
+                        //recEnginer.SetInputToDefaultAudioDevice();
+                        //recEnginer.RecognizeAsync(RecognizeMode.Multiple);
+                    }
+                    catch (Exception ex)
+                    {
+                        MainWindow.MessageBox((IntPtr)0, "" + ex.ToString(), "sc core systems message", 0);
+                    }
+
+                    hasSpoken = 0;
+                }
+
+                keyboardclickscounter++;
+            }
+
+            if (resetVoidExpanserecog.Elapsed.TotalSeconds >  5) // 5 seconds for 120 frames per seconds in void expanse.
+            {
+                /*if (counterForResetingVoidExpanseMenu >= maxcounterForResetingVoidExpanseMenu)
+                {
+                    MainWindow.MessageBox((IntPtr)0, "counter over", "sc core systems message", 0);
+
+                    isDispatching = 0;
+                    counterForResetingVoidExpanseMenu = 0;
+                }*/
+
+                //MainWindow.MessageBox((IntPtr)0, "counter over", "sc core systems message", 0);
+
+                _sec_received_messages[17]._message = "reseted comms";
+                _sec_received_messages[17]._originalMsg = "reseted comms";
+                _sec_received_messages[17]._messageCut = "reseted comms";
+                _sec_received_messages[17]._specialMessage = 2;
+                _sec_received_messages[17]._specialMessageLineX = 0;
+                _sec_received_messages[17]._specialMessageLineY = 0;
+                _sec_received_messages[17]._orilineX = 1;// _sec_received_messages[17]._orilineX + msgVoidExpanseDisabled.Length + 1;
+                _sec_received_messages[17]._orilineY = 11;// _sec_received_messages[17]._orilineY;
+                _sec_received_messages[17]._lineX = 1;// _sec_received_messages[17]._orilineX + msgVoidExpanseDisabled.Length + 1;
+                _sec_received_messages[17]._lineY = 11;//_sec_received_messages[17]._orilineY;
+                _sec_received_messages[17]._count = 0;
+                _sec_received_messages[17]._swtch0 = 1;
+                _sec_received_messages[17]._swtch1 = 1;
+                _sec_received_messages[17]._delay = 25;
+                _sec_received_messages[17]._looping = 0;
+
+
+                isDispatching = 0;
+                counterForResetingVoidExpanseMenu = 0;
+                counterForResetingVoidExpanseMenu++;
+                resetVoidExpanserecog.Stop();
+                resetVoidExpanserecog.Reset();
+            }
+          
+
 
 
             //Console.Title = "" + _mainThreadFrameCounter.ToString();
@@ -2229,6 +2633,27 @@ namespace SCCoreSystems
         }
         //////////////////////////////////
         //////////////////////////////////
+
+        static int counterForResetingVoidExpanseMenu = 0;
+        static int maxcounterForResetingVoidExpanseMenu = 350;
+
+        static Stopwatch resetVoidExpanserecog = new Stopwatch();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2283,7 +2708,7 @@ namespace SCCoreSystems
                         if (_canLoadStarterItems)
                         {
                             //Console.WriteLine("grammar load");
-                            threadOneGrammarLoad();
+                            //threadOneGrammarLoad();
                             _canLoadStarterItems = false;
                         }
 
@@ -2338,28 +2763,36 @@ namespace SCCoreSystems
 
 
         //private static SpeechRecognitionEngine recEnginer =new SpeechRecognitionEngine("en-GB");
+        static GrammarBuilder gb;
+        static Grammar mygrammar;
+        static Choices mychoices;// = new Choices();
 
         static SpeechRecognitionEngine recEnginer;
-        public static void threadOneGrammarLoad()
+        public void threadOneGrammarLoad()
         {
             var enUS = new System.Globalization.CultureInfo("en-US");
-            SpeechRecognitionEngine rec = new SpeechRecognitionEngine(enUS);
+            //SpeechRecognitionEngine rec = new SpeechRecognitionEngine(enUS);
 
 
             recEnginer = new SpeechRecognitionEngine(new CultureInfo("en-US"));
             //Console.WriteLine("test0");
 
-            Choices mychoices = new Choices();
+            mychoices = new Choices();
             //mychoices.Add(new string[] { "Ok", "Test", "Hello" });
             //mychoices.Add(new string[] { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" });
             //mychoices.Add(new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" });
-            mychoices.Add(new string[] { "Ok", "Play", "Stop", "Cancel", "Repeat", "Select", "Backward", "Forward" }); //, "Attack"
+            //mychoices.Add(new string[] { "Ok", "Play", "Stop", "Cancel", "Repeat", "Select", "Backward", "Forward" }); //, "Attack"
+            mychoices.Add(new string[] { "start", "stop",
+                                         "dispatch", "market", "release", "retrieve","combat", "repair", "mining",
+                                         "attack",});
+
+
 
             try
             {
-                GrammarBuilder gb = new GrammarBuilder();
+                gb = new GrammarBuilder();
                 gb.Append(mychoices);
-                Grammar mygrammar = new Grammar(gb);
+                mygrammar = new Grammar(gb);
                 recEnginer.LoadGrammarAsync(mygrammar);
 
                 recEnginer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recEngine_SpeechRecognized);
@@ -2618,14 +3051,28 @@ namespace SCCoreSystems
         static string speechcaptured = "Speech Captured";
         static string msgenabled = "Speech Recognit ON";
         static string msgdisabled = "Speech Recognit OFF";
+
+
+        static string msgVoidExpanseDisabled = "Void Expanse OFF";
+
         static int recognitwordswtch = 0;
+
+
+
+
+
+
+
+
+
 
         static void recEngine_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             recognitwordswtch = 0;
             lastWord = "";
+
             //currentWord = e.Result.Text;
-            Console.WriteLine("test" + _hitCounter);
+            //Console.WriteLine("test" + _hitCounter);
 
             //MainWindow.MessageBox((IntPtr)0,"test","sccoresystems",0);
 
@@ -2650,6 +3097,151 @@ namespace SCCoreSystems
 
             switch (e.Result.Text.ToLower())
             {
+                case "market":
+                    lastWord = "market";
+                    //SC_Console.WriteAt(functionCounter00 + "", 0, 14, false);
+                    //Console.WriteLine(lastWord);
+                    //totalCombination += lastWord;
+                    functionCounter03++;
+                    counterTotalWords++;
+                    frameCounterForVoiceRecognitionRecognizedWords++;
+                    recognitwordswtch = 1;
+
+                    //PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 1);
+                    //PostMessage(vewindowsfoundedz, WM_KEYUP, VK_4, 0);
+                    //SendMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 0);
+                    //SendMessage(vewindowsfoundedz, WM_KEYUP, VK_4, 0);
+                    //SendMessage(vewindowsfoundedz, WM_KEYUP, VK_4, 0);
+                    //SendMessage(vewindowsfoundedz, WM_KEYUP, VK_4, 0);
+
+                    //_keyboard_input._KeyboardState.PressedKeys.Contains(SharpDX.DirectInput.Key.NumberPad4);
+                    hasSpoken = 1;
+
+
+                    //keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                    //keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+
+                    //keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                    //keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+
+                    //PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 0);
+                    //PostMessage(vewindowsfoundedz, WM_KEYUP, VK_4, 0);
+                    //SendMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 1);
+
+
+                    //PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 1);
+                    //PostMessage(vewindowsfoundedz, WM_KEYUP, VK_4, 1);
+
+
+                    /*SendMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 1);
+                    PostMessage(vewindowsfoundedz, WM_SYSKEYDOWN, VK_4, 0);
+                    PostMessage(vewindowsfoundedz, WM_KEYDOWN | WM_KEYUP, VK_4, 0);
+                    SendMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 0);*/
+
+
+                    /*var updateMainUITitle = new Action(() =>
+                    {
+                        PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 1);
+                        SendMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 1);
+                        PostMessage(vewindowsfoundedz, WM_SYSKEYUP, VK_4, 0);
+                        PostMessage(vewindowsfoundedz, WM_KEYDOWN | WM_KEYUP, VK_4, 0);
+                        SendMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 0);
+
+                        
+                    });
+
+                    Dispatcher.Invoke(updateMainUITitle);*/
+
+                    break;
+                case "start":
+                    lastWord = "start";
+                    functionCounter03++;
+                    counterTotalWords++;
+                    frameCounterForVoiceRecognitionRecognizedWords++;
+                    recognitwordswtch = 1;
+                    hasSpoken = 1;
+                    break;
+                case "stop":
+                    lastWord = "stop";
+                    functionCounter03++;
+                    counterTotalWords++;
+                    frameCounterForVoiceRecognitionRecognizedWords++;
+                    recognitwordswtch = 1;
+                    hasSpoken = 1;
+                    break;
+                case "mining":
+                    lastWord = "mining";
+                    functionCounter03++;
+                    counterTotalWords++;
+                    frameCounterForVoiceRecognitionRecognizedWords++;
+                    recognitwordswtch = 1;
+                    hasSpoken = 1;
+                    break;
+                case "combat":
+                    lastWord = "combat";
+                    functionCounter03++;
+                    counterTotalWords++;
+                    frameCounterForVoiceRecognitionRecognizedWords++;
+                    recognitwordswtch = 1;
+                    hasSpoken = 1;
+                    break;
+                case "repair":
+                    lastWord = "repair";
+                    functionCounter03++;
+                    counterTotalWords++;
+                    frameCounterForVoiceRecognitionRecognizedWords++;
+                    recognitwordswtch = 1;
+                    hasSpoken = 1;
+                    break;
+                case "release":
+                    lastWord = "release";
+                    functionCounter03++;
+                    counterTotalWords++;
+                    frameCounterForVoiceRecognitionRecognizedWords++;
+                    recognitwordswtch = 1;
+                    hasSpoken = 1;
+                    break;
+                case "dispatch":
+                    lastWord = "dispatch";
+                    //SC_Console.WriteAt(functionCounter00 + "", 0, 14, false);
+                    //Console.WriteLine(lastWord);
+                    //totalCombination += lastWord;
+                    functionCounter03++;
+                    counterTotalWords++;
+                    frameCounterForVoiceRecognitionRecognizedWords++;
+                    recognitwordswtch = 1;
+
+                    //_keyboard_input._KeyboardState.PressedKeys.Contains(SharpDX.DirectInput.Key.NumberPad4);
+                    //keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_5);               
+                    //PostMessage(vewindowsfoundedz, WM_KEYDOWN , VK_4, 1);
+                    //PostMessage(vewindowsfoundedz, WM_KEYUP, VK_4, 1);
+                    //SendMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 1);
+                    //keyboardsim.KeyDown(WindowsInput.Native.VirtualKeyCode.VK_4);
+                    //keyboardsim.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_4);
+                    hasSpoken = 1;
+
+
+                    /*SendMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 1);
+                    PostMessage(vewindowsfoundedz, WM_SYSKEYDOWN, VK_4, 0);
+                    PostMessage(vewindowsfoundedz, WM_KEYDOWN | WM_KEYUP, VK_4, 0);
+                    SendMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 0);*/
+
+
+                    /*var updateMainUITitle = new Action(() =>
+                    {
+                        PostMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 1);
+                        SendMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 1);
+                        PostMessage(vewindowsfoundedz, WM_SYSKEYUP, VK_4, 0);
+                        PostMessage(vewindowsfoundedz, WM_KEYDOWN | WM_KEYUP, VK_4, 0);
+                        SendMessage(vewindowsfoundedz, WM_KEYDOWN, VK_4, 0);
+
+                        
+                    });
+
+                    Dispatcher.Invoke(updateMainUITitle);*/
+
+                    break;
+
                 case "play":
                     lastWord = "play";
                     //SC_Console.WriteAt(functionCounter00 + "", 0, 14, false);
@@ -2660,7 +3252,7 @@ namespace SCCoreSystems
                     frameCounterForVoiceRecognitionRecognizedWords++;
                     recognitwordswtch = 1;
                     break;
-                case "stop":
+                /*case "stop":
                     lastWord = "stop";
                     //SC_Console.WriteAt(functionCounter00 + "", 0, 14, false);
                     //Console.WriteLine(lastWord);
@@ -2669,7 +3261,7 @@ namespace SCCoreSystems
                     counterTotalWords++;
                     frameCounterForVoiceRecognitionRecognizedWords++;
                     recognitwordswtch = 1;
-                    break;
+                    break;*/
                 case "cancel":
                     lastWord = "cancel";
                     //SC_Console.WriteAt(functionCounter00 + "", 0, 14, false);

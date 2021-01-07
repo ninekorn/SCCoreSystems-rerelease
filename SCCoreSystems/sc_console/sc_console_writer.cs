@@ -36,7 +36,7 @@ namespace SCCoreSystems.sc_console
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]
         public static extern int MessageBox(IntPtr h, string m, string c, int type);
 
-        static _messager[] _message_to_pass = new _messager[16];
+        static _messager[] _message_to_pass = new _messager[MainWindow.MaxSizeMessageObject];
         public static List<_messager> _message_to_pass_list = new List<_messager>();
 
         _messager _dummyMessage = new _messager();
