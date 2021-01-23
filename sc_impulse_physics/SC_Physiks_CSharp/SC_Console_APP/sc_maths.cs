@@ -736,59 +736,6 @@ namespace SCCoreSystems
         }
 
 
-        //ProjectileHelper in Unity3D
-        public static bool ComputeTimeToHitGround(
-                                                Vector2 startPosition,
-                                                Vector2 velocity,
-                                                float groundLevel,
-                                                float gravity_negative,
-                                                out float timeToHit)
-        {
-            float heightDiff = groundLevel - startPosition.Y;
-            float speed = velocity.Y;
-            float b2minus4ac = (speed * speed) + (2.0f * gravity_negative * heightDiff);
-            if (b2minus4ac < 0.0f)
-            {
-                timeToHit = -1.0f;
-                return false;
-            }
-
-            float sqrtB2minus4ac = (float)Math.Sqrt(b2minus4ac);
-            float time1 = (-speed + sqrtB2minus4ac) / gravity_negative;
-            float time2 = (-speed - sqrtB2minus4ac) / gravity_negative;
-
-            // two possible times to hit, since the projectile goes up and down
-            // take the bigger one since we assume we want to hit the ground when going down
-            float timeNeeded = Math.Max(time1, time2);
-            if (timeNeeded < 0.0f)
-            {
-                timeToHit = -1.0f;
-                return false;
-            }
-
-            timeToHit = timeNeeded;
-            return true;
-        }
-        public static Vector2 ComputePositionAtTimeAhead(
-      Vector2 currentPosition,
-      Vector2 velocity,
-      float gravity_negative,
-      float timeAhead)
-        {
-            Vector2 acceleration = new Vector2(0.0f, gravity_negative);
-            Vector2 move = (velocity * timeAhead) + (0.5f * acceleration * timeAhead * timeAhead);
-            return currentPosition + move;
-        }
-
-        public static Vector2 ComputeVelocityAtTimeAhead(
-    Vector2 currentPosition,
-    Vector2 currentVelocity,
-    float gravity_negative,
-    float timeAhead)
-        {
-            Vector2 acceleration = new Vector2(0.0f, gravity_negative);
-            return currentVelocity + (acceleration * timeAhead);
-        }
 
         public static T Clamp<T>(this T val, T min, T max) where T : IComparable<T>
         {
